@@ -1,0 +1,80 @@
+
+delimit                                                                  delimit
+
+NAME
+
+  delimit - delimits text files using a format file
+
+SYNOPSIS
+
+  delimit (options)
+
+DESCRIPTION
+
+  delimit is designed to read each record containing fields from a text file and
+  insert delimiters between each field. delimit can reformat each field using
+  filter actions defined in a format file where each line in the format file
+  must contain the field size, field filter action and field name for each field
+  in the input text file.
+
+  The following options are available:
+
+  -h  display options that are interpreted by delimit
+  -f  format file
+  -i  input file
+  -o  output file
+  -r  report statistics
+  -w  write over mode
+  -v  display version
+  -s  single quote delimiters
+  -d  double quote delimiters
+  -c  comma field delimiters
+  -t  tab field delimiters
+  -x  space field delimiters
+  -u  unique delimiter (0x00 hexadecimal number)
+
+  An unique delimiter must be represented as a hexadecimal number and must be
+  represented in 0x00 format (for example: the line feed character is 0a).
+
+DELIMIT FORMAT FILE
+
+  Each line in the format file must be contain the following:
+
+  <field size> <field filter action> <field name>
+
+  Field filter actions can be either:
+
+  o  -             no action
+  o  alphabetic    allow only alphabetic characters
+  o  alphanumeric  allow only either alphabetic characters or digits (0-9)
+  o  numeric       allow only digits (0-9)
+  o  null          null field (zero length)
+  o  remove        remove field
+  o  spaces        replace field with space characters
+  o  "string"      replace field with this string
+
+  Field name can be either:
+
+  o  -             no field name
+  o  "field name"  field name
+
+  delimit requires the following syntax rules for each format file line:
+
+  o  each command statement must be terminated with a new line
+  o  each keyword be separated by at least a single white space
+  o  each keyword must be lower case only
+  o  each quoted string must be enclosed in double quotes
+  o  each comment line must begin with the pound symbol
+
+DEFAULTS
+
+  o  maximum field size is 512 bytes
+  o  maximum field replacement string size is 512 bytes
+  o  maximum field name is 64 characters
+  o  non-alphabetic characters are replaced with a space
+  o  non-numeric digits are replaced with a zero
+
+NOTES
+
+  Copyright (c) 1993-2020 Code Construct Systems (CCS)
+
