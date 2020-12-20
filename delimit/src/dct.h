@@ -4,7 +4,7 @@
 **  delimit - file fields dictionary for the text file delimiter
 **  ------------------------------------------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #ifndef __DCT_H
 #define __DCT_H

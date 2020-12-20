@@ -4,16 +4,16 @@
 #                                                                              #
 # delimit utility                                                              #
 #                                                                              #
-# version 9.4.0 release 1                                                      #
+# version 9.5.0 release 1                                                      #
 #                                                                              #
-# copyright (c) 1993-2020 Code Construct Systems (CCS) [CONFIDENTIAL]          #
+# copyright (c) 1993-2021 Code Construct Systems (CCS) [CONFIDENTIAL]          #
 #                                                                              #
 ################################################################################
 
 # Open Systems OS/OE port
 
 #
-# Text file delimiter application name
+# Delimit text file utility application name
 #
 TARGET = delimit
 
@@ -31,7 +31,13 @@ CFLAGS = -c
 #
 # C compiler definitions flags
 #
-CDEFINITIONS = -DYY_NO_UNPUT -DYY_NO_LEAKS -D_FREE_LEXICAL_BUFFERS -D_POSIX_ENVIRONMENT -D_ARCH_32 -D_FORMAT_P_SPECIFIER
+CDEFINITIONS = \
+	-D_POSIX_ENVIRONMENT \
+	-D_ARCH_32 \
+	-D_FREE_LEXICAL_BUFFERS \
+	-D_FORMAT_P_SPECIFIER \
+	-DYY_NO_UNPUT \
+	-DYY_NO_LEAKS
 
 #
 # C compiler debug and optimize flags
@@ -73,7 +79,7 @@ LEXER = flex
 LEXERFLAGS = -I
 
 #
-# List of object files
+# Object files
 #
 OBJECTS = \
 	delimit.o \
@@ -86,13 +92,10 @@ OBJECTS = \
 	util.o \
 	port.o
 
-#
-# Rule for default targets
-#
 all: $(TARGET)
 
 #
-# Rule for creating text file delimiter application file
+# Rule for creating delimit text file utility application file
 #
 $(TARGET): $(OBJECTS)
 	@echo "building application: $@"
@@ -137,7 +140,7 @@ lex.o: lex.c
 	@$(CC) $(CFLAGS) $(INCLUDE) $(CWARNINGS) $(CDEBUG) $(COPTIMIZE) $(CDEFINITIONS) -o $@ $<
 
 #
-# Rule for deploying text file delimiter executables and other files
+# Rule for deploying application and other files
 #
 deploy: $(TARGET)
 	cp -f $(TARGET) $(INSTALLATION)

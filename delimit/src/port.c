@@ -4,7 +4,7 @@
 **  delimit - portable functions
 **  ----------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -130,7 +130,23 @@ int fopen_p(FILE **fp, const string_c_t filename, const string_c_t mode) {
 ** Close file stream
 */
 int fclose_p(FILE *fp) {
-    return (fp ? fclose(fp) : EXIT_SUCCESS);
+    if (fp == NULL) {
+        return (EXIT_SUCCESS);
+    }
+    return (fileno(fp) > 0 ? fclose(fp) : EXIT_SUCCESS);
+}
+
+/*
+** Base name from file path
+*/
+int basename_p(const string_c_t file_path, string_c_t *file_name) {
+#ifdef _WINDOWS
+    char *p = strrchr(file_path, '\\');
+#else
+    char *p = strrchr(file_path, '/');
+#endif
+    *file_name = p ? p + 1 : (char *)file_path;
+    return (EXIT_SUCCESS);
 }
 
 /*

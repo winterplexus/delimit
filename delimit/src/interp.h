@@ -4,7 +4,7 @@
 **  delimit - commands interpreter
 **  ------------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #ifndef __INTERP_H
 #define __INTERP_H
@@ -24,7 +24,7 @@ extern int yylineno;
 */
 extern int yylex(void);
 extern int yyparse(void);
-extern int yyparseinit(delimit_specs_t *);
+extern int yyparseinit(delimit_specifications_t *);
 extern int yylex_destroy(void);
 
 #endif /* __INTERP_H */

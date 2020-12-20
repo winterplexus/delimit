@@ -4,7 +4,7 @@
 **  delimit - command line options
 **  ------------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #ifndef __OPTIONS_H
 #define __OPTIONS_H
@@ -21,17 +21,17 @@
 /*
 ** Command line options structure and type
 */
-typedef struct options_s { 
-        char format[_MAX_FILE_NAME_SIZE + 1];  
+typedef struct options_s {
+        char format[_MAX_FILE_NAME_SIZE + 1];
         char input[_MAX_FILE_NAME_SIZE + 1];
         char output[_MAX_FILE_NAME_SIZE + 1];
         char unique_delimiter[_MAX_UNIQUE_DELIMITER_SIZE + 1];
-        bool_c_t unique;
+        bool_c_t comma;
         bool_c_t tab;
         bool_c_t space;
-        bool_c_t comma;
-        bool_c_t double_quote;
         bool_c_t single_quote;
+        bool_c_t double_quote;
+        bool_c_t unique;
         bool_c_t statistics;
         bool_c_t overwrite;
 } options_t;

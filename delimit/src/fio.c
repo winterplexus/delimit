@@ -4,7 +4,7 @@
 **  delimit - file I/O functions for the text file delimiter
 **  --------------------------------------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -12,17 +12,17 @@
 ** Local function prototypes
 */
 static int CheckFileModeType(const string_c_t);
-static int OpenInput(delimit_specs_t *);
-static int OpenOutput(delimit_specs_t *);
-static int OpenOutputTemporaryFile(delimit_specs_t *);
-static int OpenInputAsOutput(delimit_specs_t *);
-static int CloseInput(delimit_specs_t *);
-static int CloseOutput(delimit_specs_t *);
+static int OpenInput(delimit_specifications_t *);
+static int OpenOutput(delimit_specifications_t *);
+static int OpenOutputTemporaryFile(delimit_specifications_t *);
+static int OpenInputAsOutput(delimit_specifications_t *);
+static int CloseInput(delimit_specifications_t *);
+static int CloseOutput(delimit_specifications_t *);
 
 /*
 ** Open files for text file delimiter
 */
-int DelimitFileOpen(delimit_specs_t *ds, bool_c_t use_temporary) {
+int DelimitFileOpen(delimit_specifications_t *ds, bool_c_t use_temporary) {
     /*
     ** Open input file after checking file mode type
     */
@@ -56,14 +56,67 @@ int DelimitFileOpen(delimit_specs_t *ds, bool_c_t use_temporary) {
 /*
 ** Open input file as output for text file delimiter
 */
-int DelimitFileOpenInputAsOutput(delimit_specs_t *ds) {
+int DelimitFileOpenInputAsOutput(delimit_specifications_t *ds) {
     return (OpenInputAsOutput(ds));
+}
+
+/*
+** Write field delimiter
+*/
+int DelimitWriteFieldDelimiter(delimit_specifications_t * ds) {
+    char delimiter[2] = { 0, 0 };
+
+    /*
+    ** Set field delimiter string based on given delimiter type; use comma separator if delimiter type is missing
+    */
+    if (ds->delimiters.tab == TRUE) {
+        strcpy_p(delimiter, sizeof(delimiter), (string_c_t)_TAB_SEPARATOR, sizeof(_TAB_SEPARATOR));
+    }
+    else if (ds->delimiters.space == TRUE) {
+        strcpy_p(delimiter, sizeof(delimiter), (string_c_t)_SPC_SEPARATOR, sizeof(_SPC_SEPARATOR));
+    }
+    else if (ds->delimiters.unique == TRUE) {
+        strfmt_p(delimiter, sizeof(delimiter), (string_c_t)"%c", ds->delimiters.unique_chr);
+    }
+    else {
+        strcpy_p(delimiter, sizeof(delimiter), (string_c_t)_COMMA_SEPARATOR, sizeof(_COMMA_SEPARATOR));
+    }
+
+    /*
+    ** Write delimiter string to output file
+    */
+    return (DelimitFileWriteString(ds, delimiter));
+}
+
+/*
+** Write field quote
+*/
+int DelimitWriteFieldQuote(delimit_specifications_t * ds) {
+    char qoute[2] = { '\0', '\0' };
+
+    /*
+    ** Set field qoute based on given qoute type
+    */
+    if (ds->delimiters.double_quote) {
+        strcpy_p(qoute, sizeof(qoute), (string_c_t)_DOUBLE_QUOTE, sizeof(_DOUBLE_QUOTE));
+    }
+    if (ds->delimiters.single_quote) {
+        strcpy_p(qoute, sizeof(qoute), (string_c_t)_SINGLE_QUOTE, sizeof(_SINGLE_QUOTE));
+    }
+    if (!strlen(qoute)) {
+        return (EXIT_SUCCESS);
+    }
+
+    /*
+    ** Write field qoute string to output file
+    */
+    return (DelimitFileWriteString(ds, qoute));
 }
 
 /*
 ** Read character from input file for text file delimiter
 */
-int DelimitFileRead(delimit_specs_t *ds, int *c) {
+int DelimitFileRead(delimit_specifications_t *ds, int *c) {
     /*
     ** Read character from input file
     */
@@ -80,7 +133,7 @@ int DelimitFileRead(delimit_specs_t *ds, int *c) {
     ** Check if read error
     */
     if (ferror(ds->input.fp)) {
-        perror(ds->input.name);
+        printf("error-> unable to read from input file: %s (%d)\n", ds->input.name, errno);
         ds->input.io_state = IO_READ_ERROR;
         return (EXIT_FAILURE);
     }
@@ -97,7 +150,7 @@ int DelimitFileRead(delimit_specs_t *ds, int *c) {
 /*
 ** Unread character to input file for text file delimiter
 */
-int DelimitFileUnread(delimit_specs_t *ds, int c) {
+int DelimitFileUnread(delimit_specifications_t *ds, int c) {
     /*
     ** Unread character and decrement input file counter if not end of file or read error
     */
@@ -111,7 +164,7 @@ int DelimitFileUnread(delimit_specs_t *ds, int c) {
 /*
 ** Read a string from input file for text file delimiter
 */
-int DelimitFileReadString(delimit_specs_t *ds, string_c_t s, size_t size) {
+int DelimitFileReadString(delimit_specifications_t *ds, string_c_t s, size_t size) {
     /*
     ** Read string from input file
     */
@@ -130,7 +183,7 @@ int DelimitFileReadString(delimit_specs_t *ds, string_c_t s, size_t size) {
     ** Check if read error
     */
     if (ferror(ds->input.fp)) {
-        perror(ds->input.name);
+        printf("error-> unable to read from input file: %s (%d)\n", ds->input.name, errno);
         ds->input.io_state = IO_READ_ERROR;
         return (EXIT_FAILURE);
     }
@@ -147,7 +200,7 @@ int DelimitFileReadString(delimit_specs_t *ds, string_c_t s, size_t size) {
 /*
 ** Write character to output file for text file delimiter
 */
-int DelimitFileWrite(delimit_specs_t *ds, int c) {
+int DelimitFileWrite(delimit_specifications_t *ds, int c) {
     /*
     ** Write character to output file
     */
@@ -161,7 +214,7 @@ int DelimitFileWrite(delimit_specs_t *ds, int c) {
         ds->output.counter++;
     }
     else {
-        perror(ds->output.name);
+        printf("error-> unable to write to output file: %s (%d)\n", ds->output.name, errno);
         ds->output.io_state = IO_WRITE_ERROR;
         return (EXIT_FAILURE);
     }
@@ -171,7 +224,7 @@ int DelimitFileWrite(delimit_specs_t *ds, int c) {
 /*
 ** Write a string to output file for text file delimiter
 */
-int DelimitFileWriteString(delimit_specs_t *ds, string_c_t s) {
+int DelimitFileWriteString(delimit_specifications_t *ds, string_c_t s) {
     /*
     ** Write string to output file
     */
@@ -185,7 +238,7 @@ int DelimitFileWriteString(delimit_specs_t *ds, string_c_t s) {
         ds->output.counter++;
     }
     else {
-        perror(ds->output.name);
+        printf("error-> unable to write to output file: %s (%d)\n", ds->output.name, errno);
         ds->output.io_state = IO_WRITE_ERROR;
         return (EXIT_FAILURE);
     }
@@ -195,7 +248,7 @@ int DelimitFileWriteString(delimit_specs_t *ds, string_c_t s) {
 /*
 ** Close files for text file delimiter
 */
-int DelimitFileClose(delimit_specs_t *ds) {
+int DelimitFileClose(delimit_specifications_t *ds) {
     CloseInput(ds);
     CloseOutput(ds);
     return (EXIT_SUCCESS);
@@ -204,14 +257,14 @@ int DelimitFileClose(delimit_specs_t *ds) {
 /*
 ** Close input file for text file delimiter
 */
-int DelimitFileCloseInput(delimit_specs_t *ds) {
+int DelimitFileCloseInput(delimit_specifications_t *ds) {
     return (CloseInput(ds));
 }
 
 /*
 ** Close output file for text file delimiter
 */
-int DelimitFileCloseOutput(delimit_specs_t *ds) {
+int DelimitFileCloseOutput(delimit_specifications_t *ds) {
     return (CloseOutput(ds));
 }
 
@@ -226,7 +279,7 @@ static int CheckFileModeType(const string_c_t filename) {
     ** Get file status
     */
     if (stat(filename, &st) < 0) {
-        perror(filename);
+        printf("error-> unable to get file status from file: %s (%d)\n", filename, errno);
         return (EXIT_FAILURE);
     }
 
@@ -251,7 +304,7 @@ static int CheckFileModeType(const string_c_t filename) {
 /*
 ** Open input file
 */
-static int OpenInput(delimit_specs_t *ds) {
+static int OpenInput(delimit_specifications_t *ds) {
     /*
     ** Set input file entry fields to default values
     */
@@ -267,7 +320,7 @@ static int OpenInput(delimit_specs_t *ds) {
     if (ds->input.name && strlen(ds->input.name) > 0) {
         fopen_p(&ds->input.fp, ds->input.name, (string_c_t)_F_RO_BIN);
         if (ds->input.fp == NULL) {
-            perror(ds->input.name);
+            printf("error-> unable to open input file: %s (%d)\n", ds->input.name, errno);
             return (EXIT_FAILURE);
         }
         ds->input.opened = TRUE;
@@ -278,7 +331,7 @@ static int OpenInput(delimit_specs_t *ds) {
 /*
 ** Open output file
 */
-static int OpenOutput(delimit_specs_t *ds) {
+static int OpenOutput(delimit_specifications_t *ds) {
     /*
     ** Set output file entry fields to default values
     */
@@ -294,7 +347,7 @@ static int OpenOutput(delimit_specs_t *ds) {
     if (ds->output.name && strlen(ds->output.name) > 0) {
         fopen_p(&ds->output.fp, ds->output.name, (string_c_t)_F_RW_BIN);
         if (ds->output.fp == NULL) {
-            perror(ds->output.name);
+            printf("error-> unable to open output file: %s (%d)\n", ds->output.name, errno);
             return (EXIT_FAILURE);
         }
         ds->output.opened = TRUE;
@@ -305,7 +358,7 @@ static int OpenOutput(delimit_specs_t *ds) {
 /*
 ** Open output temporary file
 */
-static int OpenOutputTemporaryFile(delimit_specs_t *ds) {
+static int OpenOutputTemporaryFile(delimit_specifications_t *ds) {
     /*
     ** Set output temporary file entry fields to default values
     */
@@ -320,7 +373,7 @@ static int OpenOutputTemporaryFile(delimit_specs_t *ds) {
     */
     tmpfile_p(&ds->output.fp);
     if (ds->output.fp == NULL) {
-        perror("unable to create and open temporary file");
+        printf("error-> unable to create and open temporary file");
         return (EXIT_FAILURE);
     }
     ds->input.opened = TRUE;
@@ -330,7 +383,7 @@ static int OpenOutputTemporaryFile(delimit_specs_t *ds) {
 /*
 ** Open input file as output file
 */
-static int OpenInputAsOutput(delimit_specs_t *ds) {
+static int OpenInputAsOutput(delimit_specifications_t *ds) {
     /*
     ** Set input file entry fields to default values
     */
@@ -344,7 +397,7 @@ static int OpenInputAsOutput(delimit_specs_t *ds) {
     if (ds->input.name && strlen(ds->input.name) > 0) {
         fopen_p(&ds->input.fp, ds->input.name, (string_c_t)_F_RW_BIN);
         if (ds->input.fp == NULL) {
-            perror(ds->input.name);
+            printf("error-> unable to open input file: %s (%d)\n", ds->input.name, errno);
             return (EXIT_FAILURE);
         }
     }
@@ -355,7 +408,7 @@ static int OpenInputAsOutput(delimit_specs_t *ds) {
 /*
 ** Close input file
 */
-static int CloseInput(delimit_specs_t *ds) {
+static int CloseInput(delimit_specifications_t *ds) {
     if (ds->input.opened == TRUE) {
         return (fclose_p(ds->input.fp));
     }
@@ -365,7 +418,7 @@ static int CloseInput(delimit_specs_t *ds) {
 /*
 ** Close output file
 */
-static int CloseOutput(delimit_specs_t *ds) {
+static int CloseOutput(delimit_specifications_t *ds) {
     if (ds->output.opened == TRUE) {
         return (fclose_p(ds->output.fp));
     }

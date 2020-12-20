@@ -57,9 +57,6 @@
     <ClInclude Include="..\..\delimit\src\version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="delimit.resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\delimit\src\dct.c">

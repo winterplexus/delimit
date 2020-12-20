@@ -4,7 +4,7 @@
 **  delimit - command line options
 **  ------------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -60,21 +60,6 @@ static void GetOptionValues(int argc, string_c_t argv[], options_t *opts) {
         else if (strcmp(argv[i], "-o") == 0) {
             StoreOptionArgument(argc, argv, ++i, opts->output, sizeof(opts->output) - 1);
         }
-        else if (strcmp(argv[i], "-r") == 0) {
-            opts->statistics = TRUE;
-        }
-        else if (strcmp(argv[i], "-w") == 0) {
-            opts->overwrite = TRUE;
-        }
-        else if (strcmp(argv[i], "-v") == 0 && argc == 2) {
-            DisplayVersion(argc);
-        }
-        else if (strcmp(argv[i], "-s") == 0) {
-            opts->single_quote = TRUE;
-        }
-        else if (strcmp(argv[i], "-d") == 0) {
-            opts->double_quote = TRUE;
-        }
         else if (strcmp(argv[i], "-c") == 0) {
             opts->comma = TRUE;
         }
@@ -84,8 +69,20 @@ static void GetOptionValues(int argc, string_c_t argv[], options_t *opts) {
         else if (strcmp(argv[i], "-x") == 0) {
             opts->space = TRUE;
         }
+        else if (strcmp(argv[i], "-s") == 0) {
+            opts->single_quote = TRUE;
+        }
+        else if (strcmp(argv[i], "-d") == 0) {
+            opts->double_quote = TRUE;
+        }
         else if (strcmp(argv[i], "-u") == 0) {
             StoreUniqueDelimiter(argc, argv, ++i, opts);
+        }
+        else if (strcmp(argv[i], "-r") == 0) {
+            opts->statistics = TRUE;
+        }
+        else if (strcmp(argv[i], "-w") == 0) {
+            opts->overwrite = TRUE;
         }
         else if (strcmp(argv[i], "-v") == 0) {
             DisplayVersion(argc);
@@ -135,14 +132,14 @@ static void SetDefaultOptions(options_t *opts) {
     memset(opts->input, 0, _MAX_FILE_NAME_SIZE + 1);
     memset(opts->output, 0, _MAX_FILE_NAME_SIZE + 1);
     memset(opts->unique_delimiter, 0, _MAX_UNIQUE_DELIMITER_SIZE + 1);
-    opts->statistics = FALSE;
-    opts->overwrite = FALSE;
+    opts->comma = FALSE;
     opts->tab = FALSE;
     opts->space = FALSE;
-    opts->comma = FALSE;
     opts->single_quote = FALSE;
     opts->double_quote = FALSE;
     opts->unique = FALSE;
+    opts->statistics = FALSE;
+    opts->overwrite = FALSE;
 }
 
 /*
@@ -164,11 +161,15 @@ static void StoreUniqueDelimiter(int argc, string_c_t argv[], int i, options_t *
         DisplayUsage();
     }
     if (opts->unique) {
-        strcpy_p(opts->unique_delimiter, sizeof(opts->unique_delimiter), argv[i], strlen(argv[i]));
+        if (argv[i] && argv[0] != 0) {
+            strcpy_p(opts->unique_delimiter, sizeof(opts->unique_delimiter), argv[i], strlen(argv[i]));
+        }
     }
     else {
         opts->unique = TRUE;
-        strcat_p(opts->unique_delimiter, sizeof(opts->unique_delimiter), argv[i], strlen(argv[i]));
+        if (argv[i] && argv[0] != 0) {
+            strcat_p(opts->unique_delimiter, sizeof(opts->unique_delimiter), argv[i], strlen(argv[i]));
+        }
     }
 }
 
@@ -184,7 +185,7 @@ static void DisplayUnknownOptionMessage(string_c_t argument) {
 ** Display version
 */
 static void DisplayVersion(int argc) {
-    printf("%s - text file delimiter\n", _VERSION_PRODUCT);
+    printf("%s - delimit text file utility\n", _VERSION_PRODUCT);
     printf("%s\n\n", _VERSION_RELEASE);
 
     /*
@@ -204,15 +205,15 @@ static void DisplayUsage(void) {
     printf("  -f  [format file name]\n");
     printf("  -i  [input file name]\n");
     printf("  -o  [output file name]\n");
+    printf("  -c  use comma field delimiter\n");
+    printf("  -t  use tab field delimiter\n");
+    printf("  -x  use space field delimiter\n");
+    printf("  -s  use single quote delimiter\n");
+    printf("  -d  use double quote delimiter\n");
+    printf("  -u  [unique delimiter (0x00 hexadecimal number)]\n");
     printf("  -r  report statistics\n");
     printf("  -w  enable write over input file as output mode\n");
     printf("  -v  display version\n");
-    printf("  -s  use single quote delimiters\n");
-    printf("  -d  use double quote delimiters\n");
-    printf("  -c  use comma field delimiters\n");
-    printf("  -t  use tab field delimiters\n");
-    printf("  -x  use space field delimiters\n");
-    printf("  -u  [unique delimiter (0x00 hexadecimal number)]\n");
 
     /*
     ** Exit application

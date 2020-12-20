@@ -407,7 +407,7 @@ char *yytext;
 **  delimit - lexical scanner for the commands interpreter
 **  ------------------------------------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #line 12 "lex.l"
 

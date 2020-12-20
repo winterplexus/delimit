@@ -4,7 +4,7 @@
 **  delimit - file fields dictionary for the text file delimiter
 **  ------------------------------------------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -198,8 +198,7 @@ dictionary_entry_status_t GetNextDictionaryEntry(size_t *size, format_t *format,
 ** Print dictionary
 */
 void PrintDictionary(void) {
-    dictionary_t *node;
-    dictionary_t *tmp;
+    dictionary_t *node, *tmp = NULL;
 
     /*
     ** Print entry fields for each dictionary node in the linked list
@@ -214,8 +213,7 @@ void PrintDictionary(void) {
 ** Free dictionary
 */
 void FreeDictionary(void) {
-    dictionary_t *node;
-    dictionary_t *tmp;
+    dictionary_t *node, *tmp = NULL;
 
     /*
     ** Free allocated memory for each node's entry string fields and the dictionary node itself in the linked list

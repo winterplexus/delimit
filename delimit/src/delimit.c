@@ -1,10 +1,10 @@
 /*
 **  @(#)delimit.c
 **
-**  delimit - text file delimiter utility
-**  -------------------------------------
+**  delimit - delimit text file utility
+**  -----------------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -16,27 +16,26 @@ jmp_buf unwind_buffer_sp;
 /*
 ** Local function prototypes
 */
-static void ProcessFiles(options_t *, delimit_specs_t *);
-static void OpenFiles(options_t *, delimit_specs_t *);
-static void ParseFormatFile(delimit_specs_t *);
-static void SetDelimiters(options_t *, delimit_specs_t *);
-static void CloseFiles(delimit_specs_t *);
+static void ProcessFiles(options_t *, delimit_specifications_t *);
+static void OpenFiles(options_t *, delimit_specifications_t *);
+static void ParseFormatFile(delimit_specifications_t *);
+static void SetDelimiters(options_t *, delimit_specifications_t *);
+static void CloseFiles(delimit_specifications_t *);
 static void FreeLexicalBuffers(void);
-static void OverWriteInputFile(options_t *, delimit_specs_t *);
-static void SetOptions(void);
+static void OverWriteInputFile(options_t *, delimit_specifications_t *);
 static void SetSystemSignals(void);
 static void InterruptHandler(int);
-static void DisplayTotals(options_t *, delimit_specs_t *);
+static void DisplayTotals(options_t *, delimit_specifications_t *);
 
 /*
-** Text file delimiter utility driver
+** Delimit text file utility driver
 */
 int main(int argc, string_c_t argv[]) {
     options_t opts;
-    delimit_specs_t ds;
+    delimit_specifications_t ds;
 
     /*
-    ** Set system signals and if stack was unwound, close files and exit
+    ** Set system signals and if stack was unwound then close files, free lexical buffers and exit
     */
     SetSystemSignals();
     if (setjmp(unwind_buffer_sp) != 0) {
@@ -44,11 +43,6 @@ int main(int argc, string_c_t argv[]) {
         FreeLexicalBuffers();
         return (EXIT_FAILURE);
     }
-
-    /*
-    ** Set options (special)
-    */
-    SetOptions();
 
     /*
     ** Get options
@@ -64,7 +58,7 @@ int main(int argc, string_c_t argv[]) {
 /*
 ** Process files
 */
-static void ProcessFiles(options_t *opts, delimit_specs_t *ds) {
+static void ProcessFiles(options_t *opts, delimit_specifications_t *ds) {
     /*
     ** Open files
     */
@@ -109,7 +103,7 @@ static void ProcessFiles(options_t *opts, delimit_specs_t *ds) {
 /*
 ** Open files
 */
-static void OpenFiles(options_t *opts, delimit_specs_t *ds) {
+static void OpenFiles(options_t *opts, delimit_specifications_t *ds) {
     /*
     ** Open input and output files and if over-write option is true, open input file with both read and write capability
     */
@@ -123,7 +117,7 @@ static void OpenFiles(options_t *opts, delimit_specs_t *ds) {
     */
     fopen_p(&yyin, opts->format, (string_c_t)_F_RO);
     if (yyin == NULL) {
-        perror(opts->format);
+        printf("error-> unable to open format file: %s (%d)\n", opts->format, errno);
         EXIT_APPLICATION(EXIT_FAILURE);
     }
 }
@@ -131,7 +125,7 @@ static void OpenFiles(options_t *opts, delimit_specs_t *ds) {
 /*
 ** Parse format file
 */
-static void ParseFormatFile(delimit_specs_t *ds) {
+static void ParseFormatFile(delimit_specifications_t *ds) {
     /*
     ** Parser initialization
     */
@@ -156,7 +150,7 @@ static void ParseFormatFile(delimit_specs_t *ds) {
 /*
 ** Set delimiters
 */
-static void SetDelimiters(options_t *opts, delimit_specs_t *ds) {
+static void SetDelimiters(options_t *opts, delimit_specifications_t *ds) {
     /*
     ** Set unique character delimiter
     */
@@ -168,17 +162,17 @@ static void SetDelimiters(options_t *opts, delimit_specs_t *ds) {
     /*
     ** Set other delimiters
     */
-    DelimitSetTab(ds, opts->tab);
     DelimitSetComma(ds, opts->comma);
+    DelimitSetTab(ds, opts->tab);
     DelimitSetSpace(ds, opts->space);
-    DelimitSetDouble(ds, opts->double_quote);
     DelimitSetSingle(ds, opts->single_quote);
+    DelimitSetDouble(ds, opts->double_quote);
 }
 
 /*
 ** Close files
 */
-static void CloseFiles(delimit_specs_t *ds) {
+static void CloseFiles(delimit_specifications_t *ds) {
     /*
     ** Flush and close delimiter file
     */
@@ -206,7 +200,7 @@ static void FreeLexicalBuffers(void) {
 /*
 ** Over-write input file
 */
-static void OverWriteInputFile(options_t *opts, delimit_specs_t *ds) {
+static void OverWriteInputFile(options_t *opts, delimit_specifications_t *ds) {
     if (opts->overwrite) {
         /*
         ** Close input and output temporary files
@@ -222,15 +216,6 @@ static void OverWriteInputFile(options_t *opts, delimit_specs_t *ds) {
         rewind(ds->output.fp);
         FileCopy(ds->output.fp, ds->input.fp);
     }
-}
-
-/*
-** Set options (special)
-*/
-static void SetOptions(void) {
-#ifdef _DEBUG_MEMORY
-    MemoryDebugMode(TRUE);
-#endif
 }
 
 /*
@@ -252,7 +237,7 @@ static void InterruptHandler(int signal_number) {
 /*
 ** Display totals
 */
-static void DisplayTotals(options_t *opts, delimit_specs_t *ds) {
+static void DisplayTotals(options_t *opts, delimit_specifications_t *ds) {
     if (opts->statistics) {
         printf("statistics\n");
         printf("----------\n");
@@ -261,6 +246,6 @@ static void DisplayTotals(options_t *opts, delimit_specs_t *ds) {
         printf("total count: %010ld\n", ds->input.counter);
         printf("output file ->  ");
         printf("total lines: %010ld\t", ds->output.line_count);
-        printf("total count: %010ld\n\n", ds->output.counter);
+        printf("total count: %010ld\n", ds->output.counter);
     }
 }

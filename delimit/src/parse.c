@@ -15,13 +15,13 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 /*
 ** Local function prototypes
 */
-static void StoreFormat(delimit_specs_t *, size_t, format_t, string_c_t);
-static void StoreFormatReplaceString(delimit_specs_t *, size_t, string_c_t , string_c_t);
+static void StoreFormat(delimit_specifications_t *, size_t, format_t, string_c_t);
+static void StoreFormatReplaceString(delimit_specifications_t *, size_t, string_c_t , string_c_t);
 
 /*
 ** Pointer to text file delimiter specifications
 */
-static delimit_specs_t *dsp;
+static delimit_specifications_t *dsp;
 
 #line 26 "parse.y"
 typedef union {
@@ -189,7 +189,7 @@ parse_error_messages_tbl[] = {
 /*
 ** Parser initialization
 */
-int yyparseinit(delimit_specs_t *ds) {
+int yyparseinit(delimit_specifications_t *ds) {
     dsp = ds;
 }
 
@@ -205,7 +205,7 @@ int yyerror(const string_c_t message) {
 /*
 ** Store format
 */
-static void StoreFormat(delimit_specs_t *ds, size_t size, format_t format, string_c_t name) {
+static void StoreFormat(delimit_specifications_t *ds, size_t size, format_t format, string_c_t name) {
     string_c_t replace = _EMPTY_STRING;
 
     if (size < 0) {
@@ -240,7 +240,7 @@ static void StoreFormat(delimit_specs_t *ds, size_t size, format_t format, strin
 /*
 ** Store format with replacement string
 */
-static void StoreFormatReplaceString(delimit_specs_t *ds, size_t size, string_c_t replace, string_c_t name) {
+static void StoreFormatReplaceString(delimit_specifications_t *ds, size_t size, string_c_t replace, string_c_t name) {
     format_t format = REPLACE_STRING;
 
     if (size < 0) {

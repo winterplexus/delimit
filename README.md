@@ -34,3 +34,5 @@ Name Field Options | Description
 ------------------ | -----------
 `-` | no field name
 `"field name"` | given field name
+
+The applications are written in the C language for both Windows and Linux operating systems.

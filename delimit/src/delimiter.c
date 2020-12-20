@@ -4,7 +4,7 @@
 **  delimit - text file delimiter
 **  -----------------------------
 **
-**  copyright (c) 1993-2020 Code Construct Systems (CCS)
+**  copyright (c) 1993-2021 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -60,24 +60,21 @@ error_messages_tbl[] = {
 /*
 ** Local function prototypes
 */
-static string_c_t AlphabeticOnly(delimit_specs_t *, string_c_t, size_t);
-static string_c_t AlphabeticNumericOnly(delimit_specs_t *, string_c_t, size_t);
-static string_c_t NumericOnly(delimit_specs_t *, string_c_t, size_t);
-static string_c_t ReplaceString(delimit_specs_t *, string_c_t, size_t, string_c_t);
-static string_c_t SpacesOnly(delimit_specs_t *, string_c_t, size_t);
-static string_c_t ZeroLength(delimit_specs_t *, string_c_t, size_t);
-static bool_c_t EndOfLineSequence(delimit_specs_t *, string_c_t);
-static bool_c_t WriteFieldQuote(delimit_specs_t *);
-static bool_c_t WriteFieldDelimiter(delimit_specs_t *);
+static string_c_t AlphabeticOnly(delimit_specifications_t *, string_c_t, size_t);
+static string_c_t AlphabeticNumericOnly(delimit_specifications_t *, string_c_t, size_t);
+static string_c_t NumericOnly(delimit_specifications_t *, string_c_t, size_t);
+static string_c_t ReplaceString(delimit_specifications_t *, string_c_t, size_t, string_c_t);
+static string_c_t SpacesOnly(delimit_specifications_t *, string_c_t, size_t);
+static string_c_t ZeroLength(delimit_specifications_t *, string_c_t, size_t);
 
 /*
 ** Delimit open
 */
-int DelimitOpen(delimit_specs_t *ds, string_c_t input, string_c_t output, bool_c_t use_temporary) {
+int DelimitOpen(delimit_specifications_t *ds, string_c_t input, string_c_t output, bool_c_t use_temporary) {
     ds->fields.count = 0;
     ds->fields.max_size = 0;
     ds->fields.max_record_size = 0;
-    ds->replacements.character = _SP;
+    ds->replacements.character = _SPC;
     ds->replacements.number = '0';
     ds->input.io_state = IO_OK;
     ds->input.name = input;
@@ -91,42 +88,21 @@ int DelimitOpen(delimit_specs_t *ds, string_c_t input, string_c_t output, bool_c
 }
 
 /*
-** Delimit set unique
+** Delimit close
 */
-int DelimitSetUnique(delimit_specs_t *ds, bool_c_t b, string_c_t value) {
-    unsigned long number;
-
-    /*
-    ** Exit if no unique value
-    */
-    if (!value || strlen(value) < 1) {
-        return (EXIT_SUCCESS);
-    }
-
-    /*
-    **  Check and convert unique value into a number
-    */
-    if (strlen(value) > 3 && (value[1] == 'x' || value[1] == 'X')) {
-        number = strtoul(value, NULL, 16);
-        if (number != 0) {
-            ds->delimiters.unique = b;
-            ds->delimiters.unique_chr = (char)number;
-            return (EXIT_SUCCESS);
-        }
-    }
-
-    /*
-    ** Unique value is a bad hexadecimal number
-    */
-    printf("error-> %s\n", error_messages_tbl[DE_CODE00].message);
-    return (EXIT_FAILURE);
+void DelimitClose(delimit_specifications_t *ds) {
+    DelimitFileClose(ds);
 }
 
 /*
 ** Delimit file
 */
-int DelimitFile(delimit_specs_t *ds) {
-    size_t size = _WINDOWS_ENVIRONMENT ? 2 : 1;
+int DelimitFile(delimit_specifications_t *ds) {
+#ifdef _WINDOWS_ENVIRONMENT
+    size_t size = 2;
+#else
+    size_t size = 1;
+#endif
     bool_c_t f_field = TRUE;
 
     /*
@@ -164,9 +140,18 @@ int DelimitFile(delimit_specs_t *ds) {
             ds->output.line_count = ds->input.line_count;
 
             /*
-            ** Exit if not valid end of line sequence
+            ** Check if end of line sequence (characters) are valid
             */
-            if (!EndOfLineSequence(ds, df_buffer)) {
+            if (strlen(df_buffer) < size) {
+                printf("error-> %s %ld\n", error_messages_tbl[DE_CODE02].message, ds->input.line_count);
+                break;
+            }
+#ifdef _WINDOWS_ENVIRONMENT
+            if (!(df_buffer[0] == _CARRIAGE_RETURN && df_buffer[1] == _LINE_FEED)) {
+#else
+            if (!(df_buffer[0] == _LINE_FEED)) {
+#endif
+                printf("error-> %s %ld\n", error_messages_tbl[DE_CODE03].message, ds->input.line_count);
                 break;
             }
 
@@ -206,7 +191,7 @@ int DelimitFile(delimit_specs_t *ds) {
             f_field = FALSE;
         }
         else {
-            if (!WriteFieldDelimiter(ds)) {
+            if (DelimitWriteFieldDelimiter(ds) != EXIT_SUCCESS) {
                 return (EXIT_FAILURE);
             }
         }
@@ -214,7 +199,7 @@ int DelimitFile(delimit_specs_t *ds) {
         /*
         ** Write field quote
         */
-        if (!WriteFieldQuote(ds)) {
+        if (DelimitWriteFieldQuote(ds) != EXIT_SUCCESS) {
             return (EXIT_FAILURE);
         }
 
@@ -258,7 +243,7 @@ int DelimitFile(delimit_specs_t *ds) {
         /*
         ** Write field quote
         */
-        if (!WriteFieldQuote(ds)) {
+        if (DelimitWriteFieldQuote(ds) != EXIT_SUCCESS) {
             return (EXIT_FAILURE);
         }
     }
@@ -268,14 +253,14 @@ int DelimitFile(delimit_specs_t *ds) {
 /*
 ** Delimit add field count
 */
-void DelimitAddFieldCount(delimit_specs_t *ds) {
+void DelimitAddFieldCount(delimit_specifications_t *ds) {
     ds->fields.count++;
 }
 
 /*
 ** Delimit add field maximum size
 */
-void DelimitAddFieldMaxSize(delimit_specs_t *ds, size_t size) {
+void DelimitAddFieldMaxSize(delimit_specifications_t *ds, size_t size) {
     if (size) {
         ds->fields.max_size = ds->fields.max_size + size;
     }
@@ -284,58 +269,83 @@ void DelimitAddFieldMaxSize(delimit_specs_t *ds, size_t size) {
 /*
 ** Delimit add field maximum record size
 */
-void DelimitAddFieldMaxRecordSize(delimit_specs_t *ds, size_t size) {
+void DelimitAddFieldMaxRecordSize(delimit_specifications_t *ds, size_t size) {
     if (size) {
         ds->fields.max_record_size = ds->fields.max_record_size + size;
     }
 }
 
 /*
-** Delimit set tab
+** Delimit set comma
 */
-void DelimitSetTab(delimit_specs_t *ds, bool_c_t b) {
-    ds->delimiters.tab = b;
+void DelimitSetComma(delimit_specifications_t *ds, bool_c_t b) {
+    ds->delimiters.comma = b;
 }
 
 /*
-** Delimit set comma
+** Delimit set tab
 */
-void DelimitSetComma(delimit_specs_t *ds, bool_c_t b) {
-    ds->delimiters.comma = b;
+void DelimitSetTab(delimit_specifications_t *ds, bool_c_t b) {
+    ds->delimiters.tab = b;
 }
 
 /*
 ** Delimit set space
 */
-void DelimitSetSpace(delimit_specs_t *ds, bool_c_t b) {
+void DelimitSetSpace(delimit_specifications_t *ds, bool_c_t b) {
     ds->delimiters.space = b;
-}
-
-/*
-** Delimit set double
-*/
-void DelimitSetDouble(delimit_specs_t *ds, bool_c_t b) {
-    ds->delimiters.double_quote = b;
 }
 
 /*
 ** Delimit set single
 */
-void DelimitSetSingle(delimit_specs_t *ds, bool_c_t b) {
+void DelimitSetSingle(delimit_specifications_t *ds, bool_c_t b) {
     ds->delimiters.single_quote = b;
 }
 
 /*
-** Delimit close
+** Delimit set double
 */
-void DelimitClose(delimit_specs_t *ds) {
-    DelimitFileClose(ds);
+void DelimitSetDouble(delimit_specifications_t *ds, bool_c_t b) {
+    ds->delimiters.double_quote = b;
+}
+
+/*
+** Delimit set unique
+*/
+int DelimitSetUnique(delimit_specifications_t *ds, bool_c_t b, string_c_t value) {
+    unsigned long number;
+
+    /*
+    ** Exit if no unique value
+    */
+    if (!value || strlen(value) < 1) {
+        return (EXIT_SUCCESS);
+    }
+
+    /*
+    ** Check and convert unique value into a number
+    */
+    if (strlen(value) > 3 && (value[1] == 'x' || value[1] == 'X')) {
+        number = strtoul(value, NULL, 16);
+        if (number != 0) {
+            ds->delimiters.unique = b;
+            ds->delimiters.unique_chr = (char)number;
+            return (EXIT_SUCCESS);
+        }
+    }
+
+    /*
+    ** Unique value is a bad hexadecimal number
+    */
+    printf("error-> %s\n", error_messages_tbl[DE_CODE00].message);
+    return (EXIT_FAILURE);
 }
 
 /*
 ** Alphabetic only
 */
-static string_c_t AlphabeticOnly(delimit_specs_t *ds, string_c_t s, size_t size) {
+static string_c_t AlphabeticOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -354,7 +364,7 @@ static string_c_t AlphabeticOnly(delimit_specs_t *ds, string_c_t s, size_t size)
 /*
 ** Alphanumeric only
 */
-static string_c_t AlphabeticNumericOnly(delimit_specs_t *ds, string_c_t s, size_t size) {
+static string_c_t AlphabeticNumericOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -373,7 +383,7 @@ static string_c_t AlphabeticNumericOnly(delimit_specs_t *ds, string_c_t s, size_
 /*
 ** Numeric only
 */
-static string_c_t NumericOnly(delimit_specs_t *ds, string_c_t s, size_t size) {
+static string_c_t NumericOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -392,7 +402,7 @@ static string_c_t NumericOnly(delimit_specs_t *ds, string_c_t s, size_t size) {
 /*
 ** Zero length
 */
-static string_c_t ZeroLength(delimit_specs_t *ds, string_c_t s, size_t size) {
+static string_c_t ZeroLength(delimit_specifications_t *ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -406,16 +416,16 @@ static string_c_t ZeroLength(delimit_specs_t *ds, string_c_t s, size_t size) {
 /*
 ** Spaces only
 */
-static string_c_t SpacesOnly(delimit_specs_t *ds, string_c_t s, size_t size) {
+static string_c_t SpacesOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
     for (i = 0; i < size; i++) {
         if (*s == '\0') {
-            *s = _SP;
+            *s = _SPC;
         }
         if (!isspace((int)*s)) {
-            *s = _SP;
+            *s = _SPC;
         }
         s++;
     }
@@ -425,7 +435,7 @@ static string_c_t SpacesOnly(delimit_specs_t *ds, string_c_t s, size_t size) {
 /*
 ** Replace string
 */
-static string_c_t ReplaceString(delimit_specs_t *ds, string_c_t s, size_t size, string_c_t r) {
+static string_c_t ReplaceString(delimit_specifications_t *ds, string_c_t s, size_t size, string_c_t r) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -434,84 +444,4 @@ static string_c_t ReplaceString(delimit_specs_t *ds, string_c_t s, size_t size, 
         s++;
     }
     return (sp);
-}
-
-/*
-** Is end of line sequence?
-*/
-static bool_c_t EndOfLineSequence(delimit_specs_t *ds, string_c_t s) {
-    size_t size = _WINDOWS_ENVIRONMENT ? 2 : 1;
-
-    /*
-    ** Check if end of line sequence (characters) are valid
-    */
-    if (!s || strlen(s) < size) {
-        printf("error-> %s %ld\n", error_messages_tbl[DE_CODE02].message, ds->input.line_count);
-        return (FALSE);
-    }
-#ifdef _WINDOWS_ENVIRONMENT
-    if (!(s[0] == _CARRIAGE_RETURN && s[1] == _LINE_FEED)) {
-#else
-    if (!(s[0] == _LINE_FEED)) {
-#endif
-        printf("error-> %s %ld\n", error_messages_tbl[DE_CODE03].message, ds->input.line_count);
-        return (FALSE);
-    }
-    return (TRUE);
-}
-
-/*
-** Is write field quote?
-*/
-static bool_c_t WriteFieldQuote(delimit_specs_t * ds) {
-    char delimiter[2] = { '\0', '\0' };
-
-    if (ds->delimiters.double_quote) {
-        strcpy_p(delimiter, sizeof(delimiter), (string_c_t)_DOUBLE_QUOTE, sizeof(_DOUBLE_QUOTE));
-    }
-    if (ds->delimiters.single_quote) {
-        strcpy_p(delimiter, sizeof(delimiter), (string_c_t)_SINGLE_QUOTE, sizeof(_SINGLE_QUOTE));
-    }
-
-    if (!strlen(delimiter)) {
-        return (TRUE);
-    }
-    if (DelimitFileWriteString(ds, delimiter) != EXIT_SUCCESS) {
-        return (FALSE);
-    }
-    else {
-        return (TRUE);
-    }
-}
-
-/*
-** Is write field delimiter?
-*/
-static bool_c_t WriteFieldDelimiter(delimit_specs_t * ds) {
-    char delimiter[2];
-
-    memset(delimiter, 0, 2);
-
-    if (ds->delimiters.unique) {
-        strfmt_p(delimiter, sizeof(delimiter), (string_c_t)"%c", ds->delimiters.unique_chr);
-    }
-    if (ds->delimiters.tab) {
-        strcpy_p(delimiter, sizeof(delimiter), (string_c_t)_TAB_SEPARATOR, sizeof(_TAB_SEPARATOR));
-    }
-    if (ds->delimiters.space) {
-        strcpy_p(delimiter, sizeof(delimiter), (string_c_t)_SP_SEPARATOR, sizeof(_SP_SEPARATOR));
-    }
-    if (ds->delimiters.comma) {
-        strcpy_p(delimiter, sizeof(delimiter), (string_c_t)_COMMA_SEPARATOR, sizeof(_COMMA_SEPARATOR));
-    }
-
-    if (!strlen(delimiter)) {
-        return (TRUE);
-    }
-    if (DelimitFileWriteString(ds, delimiter) != EXIT_SUCCESS) {
-        return (FALSE);
-    }
-    else {
-        return (TRUE);
-    }
 }
