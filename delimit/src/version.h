@@ -23,6 +23,6 @@
 ** Define version product and string
 */
 #define _VERSION_PRODUCT "delimit"
-#define _VERSION_RELEASE "delimit 9.5.0 release 1"
+#define _VERSION_RELEASE "delimit 9.5.0 release 2"
 
 #endif /* __VERSION_H */
