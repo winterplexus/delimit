@@ -4,9 +4,9 @@
 #                                                                              #
 # delimit utility                                                              #
 #                                                                              #
-# version 9.5.0 release 1                                                      #
+# version 9.6.0 release 1                                                      #
 #                                                                              #
-# copyright (c) 1993-2021 Code Construct Systems (CCS) [CONFIDENTIAL]          #
+# copyright (c) 1993-2022 Code Construct Systems (CCS) [CONFIDENTIAL]          #
 #                                                                              #
 ################################################################################
 
@@ -38,7 +38,7 @@ CDEFINITIONS = \
 	-D_FORMAT_P_SPECIFIER \
 	-DYY_NO_UNPUT \
 	-DYY_NO_LEAKS
-
+    
 #
 # C compiler debug and optimize flags
 #
@@ -155,4 +155,3 @@ clean:
 	rm -f parse.h
 	rm -f lex.c
 	rm -f $(TARGET)
-

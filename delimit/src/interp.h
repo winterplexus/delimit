@@ -4,7 +4,7 @@
 **  delimit - commands interpreter
 **  ------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #ifndef __INTERP_H
 #define __INTERP_H

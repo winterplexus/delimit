@@ -4,7 +4,7 @@
 **  delimit - delimit text file utility
 **  -----------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #ifndef __DELIMIT_H
 #define __DELIMIT_H

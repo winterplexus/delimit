@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo delimit 9.5.0 release 1
+echo delimit 9.6.0 release 1
 echo delimit test script - open systems environments
 echo ================================================================================
 
@@ -12,6 +12,7 @@ mkdir out
 
 cp test-l.dat out/output-overwrite-01.dat
 
+echo
 echo test case 01: comma delimited, single qouted field
 echo --------------------------------------------------------------------------------
 echo
@@ -75,7 +76,7 @@ echo
 ./delimit -u 0xff -s -f test.d -i test-l.dat -o out/output09.dat -r -v
 
 echo
-echo test case 10: unique character delimited 0x08, single qouted field
+echo test case 10: unique character delimited 0x08, double qouted field
 echo --------------------------------------------------------------------------------
 echo
 

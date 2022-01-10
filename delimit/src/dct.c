@@ -4,7 +4,7 @@
 **  delimit - file fields dictionary for the text file delimiter
 **  ------------------------------------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -25,10 +25,10 @@ int StoreDictionaryEntry(const size_t size, format_t format, string_c_t replace,
     ** Set parameters to empty string if parameters are null
     */
     if (!replace) {
-        replace = (string_c_t)_EMPTY_STRING;
+        replace = (string_c_t)"";
     }
     if (!name) {
-        name = (string_c_t)_EMPTY_STRING;
+        name = (string_c_t)"";
     }
 
     /*
@@ -38,11 +38,11 @@ int StoreDictionaryEntry(const size_t size, format_t format, string_c_t replace,
     if (node == (dictionary_t *)NULL) {
         return (EXIT_FAILURE);
     }
-    node->replace = (string_c_t)MemoryAllocate(strlen(replace) + 1);
+    node->replace = (string_c_t)MemoryAllocate((long)strlen(replace) + 1);
     if (node->replace == (string_c_t)NULL) {
         return (EXIT_FAILURE);
     }
-    node->name = (string_c_t)MemoryAllocate(strlen(name) + 1);
+    node->name = (string_c_t)MemoryAllocate((long)strlen(name) + 1);
     if (node->name == (string_c_t)NULL) {
         return (EXIT_FAILURE);
     }
@@ -104,10 +104,10 @@ dictionary_entry_status_t GetStartDictionaryEntry(size_t *size, format_t *format
     ** Set parameters to empty string if parameters are null
     */
     if (!replace) {
-        replace = (string_c_t)_EMPTY_STRING;
+        replace = (string_c_t)"";
     }
     if (!name) {
-        name = (string_c_t)_EMPTY_STRING;
+        name = (string_c_t)"";
     }
 
     /*
@@ -160,10 +160,10 @@ dictionary_entry_status_t GetNextDictionaryEntry(size_t *size, format_t *format,
     ** Set parameters to empty string if parameters are null
     */
     if (!replace) {
-        replace = (string_c_t)_EMPTY_STRING;
+        replace = (string_c_t)"";
     }
     if (!name) {
-        name = (string_c_t)_EMPTY_STRING;
+        name = (string_c_t)"";
     }
 
     /*
@@ -205,7 +205,7 @@ void PrintDictionary(void) {
     */
     for (node = dictionary_node_start; node; node = tmp) {
         tmp = node->next;
-        printf("size: %4d format: %d name: %64s\n", node->size, node->format, node->name);
+        printf("dictionary-> size: %4zu format: %d name: %64s\n", node->size, node->format, node->name);
     }
 }
 

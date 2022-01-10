@@ -36,63 +36,64 @@ typedef union {
 #define T_ALPHANUMERIC 261
 #define T_NULL 262
 #define T_NUMERIC 263
-#define T_REMOVE 264
-#define T_SPACES 265
-#define T_TERM 266
-#define T_UNKNOWN 267
+#define T_PRINTABLE 264
+#define T_REMOVE 265
+#define T_SPACES 266
+#define T_TERM 267
+#define T_UNKNOWN 268
 #define YYERRCODE 256
 short yylhs[] = {                                        -1,
     0,    0,    3,    3,    1,    2,    4,    4,    4,    4,
     4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
-    4,    4,    4,
+    4,    4,    4,    4,    4,
 };
 short yylen[] = {                                         2,
     0,    1,    1,    2,    1,    1,    1,    3,    3,    3,
     3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-    3,    3,    3,
+    3,    3,    3,    3,    3,
 };
 short yydefred[] = {                                      0,
     6,    7,    0,    0,    0,    3,    5,    0,    0,    0,
-    0,    0,    0,    0,    0,    4,    8,    9,   10,   11,
-   12,   13,   14,   15,   16,   17,   18,   19,   20,   21,
-   22,   23,
+    0,    0,    0,    0,    0,    0,    4,    8,    9,   10,
+   11,   12,   13,   14,   15,   18,   19,   16,   17,   20,
+   21,   22,   23,   24,   25,
 };
 short yydgoto[] = {                                       3,
-   15,    4,    5,    6,
+   16,    4,    5,    6,
 };
-short yysindex[] = {                                   -249,
-    0,    0,    0, -257, -249,    0,    0, -247, -246, -243,
- -231, -230, -227, -226, -223,    0,    0,    0,    0,    0,
+short yysindex[] = {                                   -248,
+    0,    0,    0, -257, -248,    0,    0, -246, -245, -242,
+ -241, -228, -227, -224, -223, -220,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,
+    0,    0,    0,    0,    0,
 };
 short yyrindex[] = {                                      1,
-    0,    0,    0,    0,   15,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,   38,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,
+    0,    0,    0,    0,    0,
 };
 short yygindex[] = {                                      0,
-   10,    0,    0,   30,
+   12,    0,    0,   35,
 };
-#define YYTABLESIZE 36
+#define YYTABLESIZE 40
 short yytable[] = {                                       7,
-    1,    8,    9,   10,   11,   12,   13,   14,    1,    7,
-    7,   17,   19,    7,    2,   21,    2,   18,   20,   22,
-   24,   26,   28,   30,   32,    7,    7,   23,   25,    7,
-    7,   27,   29,    7,   16,   31,
+    1,    8,    9,   10,   11,   12,   13,   14,   15,    1,
+    7,    7,   18,   20,    7,    7,   22,   24,    2,   19,
+   21,   23,   25,   27,   29,   31,   33,   35,    7,    7,
+   26,   28,    7,    7,   30,   32,    7,    2,   34,   17,
 };
 short yycheck[] = {                                     257,
-    0,  259,  260,  261,  262,  263,  264,  265,  258,  257,
-  257,  259,  259,  257,    0,  259,  266,    8,    9,   10,
-   11,   12,   13,   14,   15,  257,  257,  259,  259,  257,
-  257,  259,  259,  257,    5,  259,
+    0,  259,  260,  261,  262,  263,  264,  265,  266,  258,
+  257,  257,  259,  259,  257,  257,  259,  259,  267,    8,
+    9,   10,   11,   12,   13,   14,   15,   16,  257,  257,
+  259,  259,  257,  257,  259,  259,  257,    0,  259,    5,
 };
 #define YYFINAL 3
 #ifndef YYDEBUG
 #define YYDEBUG 0
 #endif
-#define YYMAXTOKEN 267
+#define YYMAXTOKEN 268
 #if YYDEBUG
 char *yyname[] = {
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -102,8 +103,8 @@ char *yyname[] = {
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"T_STRING","T_NUMBER","T_DASH",
-"T_ALPHABETIC","T_ALPHANUMERIC","T_NULL","T_NUMERIC","T_REMOVE","T_SPACES",
-"T_TERM","T_UNKNOWN",
+"T_ALPHABETIC","T_ALPHANUMERIC","T_NULL","T_NUMERIC","T_PRINTABLE","T_REMOVE",
+"T_SPACES","T_TERM","T_UNKNOWN",
 };
 char *yyrule[] = {
 "$accept : session",
@@ -122,6 +123,8 @@ char *yyrule[] = {
 "command : lnumber T_ALPHANUMERIC lstring",
 "command : lnumber T_NULL T_DASH",
 "command : lnumber T_NULL lstring",
+"command : lnumber T_PRINTABLE T_DASH",
+"command : lnumber T_PRINTABLE lstring",
 "command : lnumber T_NUMERIC T_DASH",
 "command : lnumber T_NUMERIC lstring",
 "command : lnumber T_REMOVE T_DASH",
@@ -154,7 +157,7 @@ YYSTYPE yylval;
 short yyss[YYSTACKSIZE];
 YYSTYPE yyvs[YYSTACKSIZE];
 #define yystacksize YYSTACKSIZE
-#line 136 "parse.y"
+#line 145 "parse.y"
 
 /*
 ** Parse error codes type
@@ -198,7 +201,6 @@ int yyparseinit(delimit_specifications_t *ds) {
 */
 int yyerror(const string_c_t message) {
     printf("error-> format file (%d): %s\n", yylineno, message);
-
     EXIT_APPLICATION(EXIT_FAILURE);
 }
 
@@ -206,7 +208,7 @@ int yyerror(const string_c_t message) {
 ** Store format
 */
 static void StoreFormat(delimit_specifications_t *ds, size_t size, format_t format, string_c_t name) {
-    string_c_t replace = _EMPTY_STRING;
+    string_c_t replace = "";
 
     if (size < 0) {
         yyerror(parse_error_messages_tbl[ER_CODE_00].message);
@@ -218,7 +220,7 @@ static void StoreFormat(delimit_specifications_t *ds, size_t size, format_t form
         yyerror(parse_error_messages_tbl[ER_CODE_02].message);
     }
     if (name == NULL) {
-        strcpy_p(name, strlen(name), _EMPTY_STRING, sizeof(_EMPTY_STRING));
+        strcpy_p(name, strlen(name), "", sizeof(""));
     }
     else {
         if (strlen(name) < 1) {
@@ -253,7 +255,7 @@ static void StoreFormatReplaceString(delimit_specifications_t *ds, size_t size, 
         yyerror(parse_error_messages_tbl[ER_CODE_02].message);
     }
     if (replace == NULL) {
-        strcpy_p(replace, strlen(replace), _EMPTY_STRING, sizeof(_EMPTY_STRING));
+        strcpy_p(replace, strlen(replace), "", sizeof(""));
     }
     if (strlen(replace) < 1 || strlen(replace) < size) {
         yyerror(parse_error_messages_tbl[ER_CODE_03].message);
@@ -262,7 +264,7 @@ static void StoreFormatReplaceString(delimit_specifications_t *ds, size_t size, 
         yyerror(parse_error_messages_tbl[ER_CODE_04].message);
     }
     if (name == NULL) {
-        strcpy_p(name, strlen(name), _EMPTY_STRING, sizeof(_EMPTY_STRING));
+        strcpy_p(name, strlen(name), "", sizeof(""));
     }
     else {
         if (strlen(name) < 1) {
@@ -280,7 +282,7 @@ static void StoreFormatReplaceString(delimit_specifications_t *ds, size_t size, 
         EXIT_APPLICATION(EXIT_FAILURE);
     }
 }
-#line 284 "y.tab.c"
+#line 286 "y.tab.c"
 #define YYABORT goto yyabort
 #define YYREJECT goto yyabort
 #define YYACCEPT goto yyaccept
@@ -422,78 +424,86 @@ yyreduce:
     switch (yyn)
     {
 case 5:
-#line 61 "parse.y"
+#line 62 "parse.y"
 { yyval.string = yyvsp[0].string; }
 break;
 case 6:
-#line 65 "parse.y"
+#line 66 "parse.y"
 { yyval.number = yyvsp[0].number; }
 break;
 case 8:
-#line 72 "parse.y"
-{ StoreFormat(dsp, yyvsp[-2].number, NOT_APPLICABLE, (string_c_t )NULL); }
+#line 73 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, NO_ACTION, (string_c_t )NULL); }
 break;
 case 9:
-#line 76 "parse.y"
-{ StoreFormat(dsp, yyvsp[-2].number, NOT_APPLICABLE, yyvsp[0].string); }
+#line 77 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, NO_ACTION, yyvsp[0].string); }
 break;
 case 10:
-#line 80 "parse.y"
+#line 81 "parse.y"
 { StoreFormat(dsp, yyvsp[-2].number, ALPHABETIC, (string_c_t )NULL); }
 break;
 case 11:
-#line 84 "parse.y"
+#line 85 "parse.y"
 { StoreFormat(dsp, yyvsp[-2].number, ALPHABETIC, yyvsp[0].string); }
 break;
 case 12:
-#line 88 "parse.y"
+#line 89 "parse.y"
 { StoreFormat(dsp, yyvsp[-2].number, ALPHANUMERIC, (string_c_t )NULL); }
 break;
 case 13:
-#line 92 "parse.y"
+#line 93 "parse.y"
 { StoreFormat(dsp, yyvsp[-2].number, ALPHANUMERIC, yyvsp[0].string); }
 break;
 case 14:
-#line 96 "parse.y"
+#line 97 "parse.y"
 { StoreFormat(dsp, yyvsp[-2].number, ZERO_LENGTH, (string_c_t )NULL); }
 break;
 case 15:
-#line 100 "parse.y"
+#line 101 "parse.y"
 { StoreFormat(dsp, yyvsp[-2].number, ZERO_LENGTH, yyvsp[0].string); }
 break;
 case 16:
-#line 104 "parse.y"
-{ StoreFormat(dsp, yyvsp[-2].number, NUMERIC, (string_c_t )NULL); }
+#line 105 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, PRINTABLE, (string_c_t )NULL); }
 break;
 case 17:
-#line 108 "parse.y"
-{ StoreFormat(dsp, yyvsp[-2].number, NUMERIC, yyvsp[0].string); }
+#line 109 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, PRINTABLE, yyvsp[0].string); }
 break;
 case 18:
-#line 112 "parse.y"
-{ StoreFormat(dsp, yyvsp[-2].number, REMOVE_STRING, (string_c_t )NULL); }
+#line 113 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, NUMERIC, (string_c_t )NULL); }
 break;
 case 19:
-#line 116 "parse.y"
-{ StoreFormat(dsp, yyvsp[-2].number, REMOVE_STRING, yyvsp[0].string); }
+#line 117 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, NUMERIC, yyvsp[0].string); }
 break;
 case 20:
-#line 120 "parse.y"
-{ StoreFormat(dsp, yyvsp[-2].number, SPACES, (string_c_t )NULL); }
+#line 121 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, REMOVE_STRING, (string_c_t )NULL); }
 break;
 case 21:
-#line 124 "parse.y"
-{ StoreFormat(dsp, yyvsp[-2].number, SPACES, yyvsp[0].string); }
+#line 125 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, REMOVE_STRING, yyvsp[0].string); }
 break;
 case 22:
-#line 128 "parse.y"
-{ StoreFormatReplaceString(dsp, yyvsp[-2].number, yyvsp[-1].string, (string_c_t )NULL); }
+#line 129 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, SPACES, (string_c_t )NULL); }
 break;
 case 23:
-#line 132 "parse.y"
+#line 133 "parse.y"
+{ StoreFormat(dsp, yyvsp[-2].number, SPACES, yyvsp[0].string); }
+break;
+case 24:
+#line 137 "parse.y"
+{ StoreFormatReplaceString(dsp, yyvsp[-2].number, yyvsp[-1].string, (string_c_t )NULL); }
+break;
+case 25:
+#line 141 "parse.y"
 { StoreFormatReplaceString(dsp, yyvsp[-2].number, yyvsp[-1].string, yyvsp[0].string); }
 break;
-#line 497 "y.tab.c"
+#line 507 "y.tab.c"
     }
     yyssp -= yym;
     yystate = *yyssp;

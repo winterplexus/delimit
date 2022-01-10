@@ -7,32 +7,33 @@ Delimit can reformat each field using filter actions defined in a format file wh
 
 Delimit format file must contain the following for each field in the input file:
 
- `<field size> <field filter action> <field name>`
+`<field size> <field filter action> <field name>`
 
 Format Field | Description
 ------------ | -----------
-`<field size>` | size of the field
-`<field filter action>` | filter action to be performed on the field
-`<field name>` | name of the field
+`<field size>` | field size
+`<field filter action>` | field filter action (see below)
+`<field name>` | field name
 
 `<field filter action>`
 
 Filter Action Field Options | Description
 --------------------------- | -----------
 `-` | no action
-`alphabetic` | allow only alphabetic characters
-`alphanumeric` | allow only either alphabetic characters or digits (0-9)
-`numeric` | allow only digits (0-9)
-`null` | null field (zero length)
+`alphabetic` | allow alphabetic characters only
+`alphanumeric` | allow either alphabetic characters or digits (0-9) only
+`numeric` | allow digits (0-9) only
+`printable` | allow printable characters only
 `remove` | remove field
 `spaces` | replace field with space characters
 `"string"` | replace field with this string
+`null` | null field (zero length)
 
 `<field name>`
 
 Name Field Options | Description
 ------------------ | -----------
-`-` | no field name
-`"field name"` | given field name
+`-` | no name
+`"field name"` | descriptive name for field
 
-The applications are written in the C language for both Windows and Linux operating systems.
+The application is written in the C language for both Windows and Linux operating systems.

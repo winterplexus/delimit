@@ -107,6 +107,5 @@
     <None Include="..\..\delimit\src\delimit.doc">
       <Filter>Documents</Filter>
     </None>
-    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

@@ -1,17 +1,17 @@
 /*
 **  @(#)delimiter.c
 **
-**  delimit - text file delimiter
-**  -----------------------------
+**  delimiter - text file delimiter
+**  -------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
 /*
 ** Delimiter field format
 */
-static format_t df_format = NOT_APPLICABLE;
+static format_t df_format = NO_ACTION;
 
 /*
 ** Delimiter field name
@@ -63,35 +63,24 @@ error_messages_tbl[] = {
 static string_c_t AlphabeticOnly(delimit_specifications_t *, string_c_t, size_t);
 static string_c_t AlphabeticNumericOnly(delimit_specifications_t *, string_c_t, size_t);
 static string_c_t NumericOnly(delimit_specifications_t *, string_c_t, size_t);
-static string_c_t ReplaceString(delimit_specifications_t *, string_c_t, size_t, string_c_t);
+static string_c_t PrintableOnly(delimit_specifications_t *, string_c_t, size_t);
 static string_c_t SpacesOnly(delimit_specifications_t *, string_c_t, size_t);
+static string_c_t ReplaceString(delimit_specifications_t *, string_c_t, size_t, string_c_t);
 static string_c_t ZeroLength(delimit_specifications_t *, string_c_t, size_t);
 
 /*
 ** Delimit open
 */
-int DelimitOpen(delimit_specifications_t *ds, string_c_t input, string_c_t output, bool_c_t use_temporary) {
-    ds->fields.count = 0;
-    ds->fields.max_size = 0;
-    ds->fields.max_record_size = 0;
-    ds->replacements.character = _SPC;
-    ds->replacements.number = '0';
-    ds->input.io_state = IO_OK;
-    ds->input.name = input;
-    ds->input.fp = (FILE *)NULL;
-    ds->input.buffer_size = _IO_BUFFER_SIZE;
-    ds->output.io_state = IO_OK;
-    ds->output.fp = (FILE *)NULL;
-    ds->output.name = output;
-    ds->output.buffer_size = _IO_BUFFER_SIZE;
+int DelimitOpen(delimit_specifications_t *ds, bool_c_t use_temporary) {
     return (DelimitFileOpen(ds, use_temporary));
 }
 
 /*
 ** Delimit close
 */
-void DelimitClose(delimit_specifications_t *ds) {
+int DelimitClose(delimit_specifications_t *ds) {
     DelimitFileClose(ds);
+    return (EXIT_SUCCESS);
 }
 
 /*
@@ -207,22 +196,25 @@ int DelimitFile(delimit_specifications_t *ds) {
         ** Format field based on format type
         */
         switch (df_format) {
+            case NO_ACTION:
+                 break;
             case ALPHABETIC:
                  AlphabeticOnly(ds, df_buffer, df_size);
                  break;
             case ALPHANUMERIC:
                  AlphabeticNumericOnly(ds, df_buffer, df_size);
                  break;
-            case NOT_APPLICABLE:
-                 break;
             case NUMERIC:
                  NumericOnly(ds, df_buffer, df_size);
                  break;
-            case REPLACE_STRING:
-                 ReplaceString(ds, df_buffer, df_size, df_replace);
+            case PRINTABLE:
+                 PrintableOnly(ds, df_buffer, df_size);
                  break;
             case SPACES:
                  SpacesOnly(ds, df_buffer, df_size);
+                 break;
+            case REPLACE_STRING:
+                 ReplaceString(ds, df_buffer, df_size, df_replace);
                  break;
             case ZERO_LENGTH:
                  ZeroLength(ds, df_buffer, df_size);
@@ -253,61 +245,69 @@ int DelimitFile(delimit_specifications_t *ds) {
 /*
 ** Delimit add field count
 */
-void DelimitAddFieldCount(delimit_specifications_t *ds) {
+int DelimitAddFieldCount(delimit_specifications_t *ds) {
     ds->fields.count++;
+    return (EXIT_SUCCESS);
 }
 
 /*
 ** Delimit add field maximum size
 */
-void DelimitAddFieldMaxSize(delimit_specifications_t *ds, size_t size) {
+int DelimitAddFieldMaxSize(delimit_specifications_t *ds, size_t size) {
     if (size) {
         ds->fields.max_size = ds->fields.max_size + size;
     }
+    return (EXIT_SUCCESS);
 }
 
 /*
 ** Delimit add field maximum record size
 */
-void DelimitAddFieldMaxRecordSize(delimit_specifications_t *ds, size_t size) {
+int DelimitAddFieldMaxRecordSize(delimit_specifications_t *ds, size_t size) {
     if (size) {
         ds->fields.max_record_size = ds->fields.max_record_size + size;
     }
+    return (EXIT_SUCCESS);
 }
 
 /*
 ** Delimit set comma
 */
-void DelimitSetComma(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetComma(delimit_specifications_t *ds, bool_c_t b) {
     ds->delimiters.comma = b;
+    return (EXIT_SUCCESS);
 }
 
 /*
 ** Delimit set tab
 */
-void DelimitSetTab(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetTab(delimit_specifications_t *ds, bool_c_t b) {
     ds->delimiters.tab = b;
+    return (EXIT_SUCCESS);
 }
 
 /*
 ** Delimit set space
 */
-void DelimitSetSpace(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetSpace(delimit_specifications_t *ds, bool_c_t b) {
     ds->delimiters.space = b;
+    return (EXIT_SUCCESS);
 }
 
 /*
 ** Delimit set single
 */
-void DelimitSetSingle(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetSingle(delimit_specifications_t *ds, bool_c_t b) {
     ds->delimiters.single_quote = b;
+    return (EXIT_SUCCESS);
 }
 
 /*
 ** Delimit set double
 */
-void DelimitSetDouble(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetDouble(delimit_specifications_t *ds, bool_c_t b) {
     ds->delimiters.double_quote = b;
+    return (EXIT_SUCCESS);
 }
 
 /*
@@ -340,6 +340,26 @@ int DelimitSetUnique(delimit_specifications_t *ds, bool_c_t b, string_c_t value)
     */
     printf("error-> %s\n", error_messages_tbl[DE_CODE00].message);
     return (EXIT_FAILURE);
+}
+
+/*
+** Delimit set defaults
+*/
+int DelimitSetDefaults(delimit_specifications_t *ds, string_c_t input, string_c_t output) {
+    ds->fields.count = 0;
+    ds->fields.max_size = 0;
+    ds->fields.max_record_size = 0;
+    ds->replacements.character = _SPC;
+    ds->replacements.number = '0';
+    ds->input.io_state = IO_OK;
+    ds->input.name = input;
+    ds->input.fp = (FILE *)NULL;
+    ds->input.buffer_size = _IO_BUFFER_SIZE;
+    ds->output.io_state = IO_OK;
+    ds->output.fp = (FILE *)NULL;
+    ds->output.name = output;
+    ds->output.buffer_size = _IO_BUFFER_SIZE;
+    return (EXIT_SUCCESS);
 }
 
 /*
@@ -400,14 +420,19 @@ static string_c_t NumericOnly(delimit_specifications_t *ds, string_c_t s, size_t
 }
 
 /*
-** Zero length
+** Printable only
 */
-static string_c_t ZeroLength(delimit_specifications_t *ds, string_c_t s, size_t size) {
+static string_c_t PrintableOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
     for (i = 0; i < size; i++) {
-        *s = '\0';
+        if (*s == '\0') {
+            *s = ds->replacements.character;
+        }
+        if (!isprint((int)*s)) {
+            *s = ds->replacements.character;
+        }
         s++;
     }
     return (sp);
@@ -441,6 +466,20 @@ static string_c_t ReplaceString(delimit_specifications_t *ds, string_c_t s, size
 
     for (i = 0; i < size; i++) {
         *s = r[i];
+        s++;
+    }
+    return (sp);
+}
+
+/*
+** Zero length
+*/
+static string_c_t ZeroLength(delimit_specifications_t *ds, string_c_t s, size_t size) {
+    string_c_t sp = s;
+    size_t i = 0;
+
+    for (i = 0; i < size; i++) {
+        *s = '\0';
         s++;
     }
     return (sp);

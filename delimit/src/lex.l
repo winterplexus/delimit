@@ -4,7 +4,7 @@
 **  delimit - lexical scanner for the commands interpreter
 **  ------------------------------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 %option noyywrap
 
@@ -48,6 +48,7 @@ alphabetic      { return (T_ALPHABETIC); }
 alphanumeric    { return (T_ALPHANUMERIC); }
 null            { return (T_NULL); }
 numeric         { return (T_NUMERIC); }
+printable       { return (T_PRINTABLE); }
 remove          { return (T_REMOVE); }
 spaces          { return (T_SPACES); }
 .               { return (T_UNKNOWN); }

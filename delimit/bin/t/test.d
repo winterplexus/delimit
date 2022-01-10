@@ -5,5 +5,5 @@
 # ---- ------------- --------------------------------------------------------
   20   alphanumeric  "address"
   5    numeric       "zip"
-  4    numeric       "zip4"
-
+  4    numeric       "zip-4"
+  3    printable     "invoice"

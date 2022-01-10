@@ -4,7 +4,7 @@
 **  delimit - file fields dictionary for the text file delimiter
 **  ------------------------------------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #ifndef __DCT_H
 #define __DCT_H
@@ -23,7 +23,7 @@ typedef enum dictionary_entry_status_e {
 ** Data dictionary structure and type
 */
 typedef struct dictionary_s {
-        int size;
+        size_t size;
         format_t format;
         string_c_t replace;
         string_c_t name;

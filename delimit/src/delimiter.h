@@ -1,10 +1,10 @@
 /*
 **  @(#)delimiter.h
 **
-**  delimit - text file delimiter
-**  -----------------------------
+**  delimiter - text file delimiter
+**  -------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #ifndef __DELIMITER_H
 #define __DELIMITER_H
@@ -29,33 +29,27 @@
 #ifdef  _TAB
 #error  _TAB is defined in another include file
 #endif
-#ifdef  _SPC
-#error  _SPC is defined in another include file
-#endif
 #ifdef  _LINE_FEED
 #error  _LINE_FEED is defined in another include file
 #endif
 #ifdef  _CARRIAGE_RETURN
 #error  _CARRIAGE_RETURN is defined in another include file
 #endif
+#ifdef  _SPC
+#error  _SPC is defined in another include file
+#endif
 
 /*
 ** Define print control characters
 */
 #define _TAB 0x09
-#define _SPC 0x20
 #define _LINE_FEED 0x0a
 #define _CARRIAGE_RETURN 0x0d
+#define _SPC 0x20
 
 /*
 ** Check if special character strings and field separatorsare defined in another include file
 */
-#ifdef  _SINGLE_QUOTE
-#error  _SINGLE_QUOTE is defined in another include file
-#endif
-#ifdef  _DOUBLE_QUOTE
-#error  _DOUBLE_QUOTE is defined in another include file
-#endif
 #ifdef  _COMMA_SEPARATOR
 #error  _COMMA_SEPARATOR is defined in another include file
 #endif
@@ -65,6 +59,12 @@
 #ifdef  _SPC_SEPARATOR
 #error  _SPC_SEPARATOR is defined in another include file
 #endif
+#ifdef  _SINGLE_QUOTE_SEPARATOR
+#error  _SINGLE_QUOTE_SEPARATOR is defined in another include file
+#endif
+#ifdef  _DOUBLE_QUOTE_SEPARATOR
+#error  _DOUBLE_QUOTE_SEPARATOR is defined in another include file
+#endif
 #ifdef  _DECIMAL_POINT
 #error  _DECIMAL_POINT is defined in another include file
 #endif
@@ -72,24 +72,25 @@
 /*
 ** Define special character strings and field separators
 */
-#define _SINGLE_QUOTE "\'"
-#define _DOUBLE_QUOTE "\""
 #define _COMMA_SEPARATOR ","
 #define _TAB_SEPARATOR "\t"
 #define _SPC_SEPARATOR " "
+#define _SINGLE_QUOTE_SEPARATOR "\'"
+#define _DOUBLE_QUOTE_SEPARATOR "\""
 #define _DECIMAL_POINT '.'
 
 /*
 ** Filter format type
 */
 typedef enum format_e {
-        ALPHABETIC = 0,
+        NO_ACTION,
+        ALPHABETIC,
         ALPHANUMERIC,
-        NOT_APPLICABLE,
         NUMERIC,
+        PRINTABLE,
+        SPACES,
         REMOVE_STRING,
         REPLACE_STRING,
-        SPACES,
         ZERO_LENGTH
 } format_t;
 
@@ -161,17 +162,18 @@ typedef struct delimit_specifications_s {
 /*
 ** Function prototypes
 */
-extern int DelimitOpen(delimit_specifications_t *, string_c_t, string_c_t, bool_c_t);
-extern void DelimitClose(delimit_specifications_t *);
+extern int DelimitOpen(delimit_specifications_t *, bool_c_t);
+extern int DelimitClose(delimit_specifications_t *);
 extern int DelimitFile(delimit_specifications_t *);
-extern void DelimitAddFieldCount(delimit_specifications_t *);
-extern void DelimitAddFieldMaxSize(delimit_specifications_t *, size_t);
-extern void DelimitAddFieldMaxRecordSize(delimit_specifications_t *, size_t);
-extern void DelimitSetComma(delimit_specifications_t *, bool_c_t);
-extern void DelimitSetTab(delimit_specifications_t *, bool_c_t);
-extern void DelimitSetSpace(delimit_specifications_t *, bool_c_t);
-extern void DelimitSetSingle(delimit_specifications_t *, bool_c_t);
-extern void DelimitSetDouble(delimit_specifications_t *, bool_c_t);
+extern int DelimitAddFieldCount(delimit_specifications_t *);
+extern int DelimitAddFieldMaxSize(delimit_specifications_t *, size_t);
+extern int DelimitAddFieldMaxRecordSize(delimit_specifications_t *, size_t);
+extern int DelimitSetComma(delimit_specifications_t *, bool_c_t);
+extern int DelimitSetTab(delimit_specifications_t *, bool_c_t);
+extern int DelimitSetSpace(delimit_specifications_t *, bool_c_t);
+extern int DelimitSetSingle(delimit_specifications_t *, bool_c_t);
+extern int DelimitSetDouble(delimit_specifications_t *, bool_c_t);
 extern int DelimitSetUnique(delimit_specifications_t *, bool_c_t, string_c_t);
+extern int DelimitSetDefaults(delimit_specifications_t *, string_c_t input, string_c_t output);
 
 #endif /* __DELIMITER_H */

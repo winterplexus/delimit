@@ -4,7 +4,7 @@
 **  delimit - parser for the commands interpreter
 **  ---------------------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 %{
 
@@ -36,6 +36,7 @@ static delimit_specifications_t *dsp;
 %token T_ALPHANUMERIC
 %token T_NULL
 %token T_NUMERIC
+%token T_PRINTABLE
 %token T_REMOVE
 %token T_SPACES
 %token T_TERM
@@ -69,11 +70,11 @@ command
     ;
 command
     : lnumber T_DASH T_DASH
-      { StoreFormat(dsp, $1, NOT_APPLICABLE, (string_c_t )NULL); }
+      { StoreFormat(dsp, $1, NO_ACTION, (string_c_t )NULL); }
     ;
 command
     : lnumber T_DASH lstring
-      { StoreFormat(dsp, $1, NOT_APPLICABLE, $3); }
+      { StoreFormat(dsp, $1, NO_ACTION, $3); }
     ;
 command
     : lnumber T_ALPHABETIC T_DASH
@@ -98,6 +99,14 @@ command
 command
     : lnumber T_NULL lstring
       { StoreFormat(dsp, $1, ZERO_LENGTH, $3); }
+    ;
+command
+    : lnumber T_PRINTABLE T_DASH
+      { StoreFormat(dsp, $1, PRINTABLE, (string_c_t )NULL); }
+    ;
+command
+    : lnumber T_PRINTABLE lstring
+      { StoreFormat(dsp, $1, PRINTABLE, $3); }
     ;
 command
     : lnumber T_NUMERIC T_DASH
@@ -176,7 +185,6 @@ int yyparseinit(delimit_specifications_t *ds) {
 */
 int yyerror(const string_c_t message) {
     printf("error-> format file (%d): %s\n", yylineno, message);
-
     EXIT_APPLICATION(EXIT_FAILURE);
 }
 
@@ -184,7 +192,7 @@ int yyerror(const string_c_t message) {
 ** Store format
 */
 static void StoreFormat(delimit_specifications_t *ds, size_t size, format_t format, string_c_t name) {
-    string_c_t replace = _EMPTY_STRING;
+    string_c_t replace = "";
 
     if (size < 0) {
         yyerror(parse_error_messages_tbl[ER_CODE_00].message);
@@ -196,7 +204,7 @@ static void StoreFormat(delimit_specifications_t *ds, size_t size, format_t form
         yyerror(parse_error_messages_tbl[ER_CODE_02].message);
     }
     if (name == NULL) {
-        strcpy_p(name, strlen(name), _EMPTY_STRING, sizeof(_EMPTY_STRING));
+        strcpy_p(name, strlen(name), "", sizeof(""));
     }
     else {
         if (strlen(name) < 1) {
@@ -231,7 +239,7 @@ static void StoreFormatReplaceString(delimit_specifications_t *ds, size_t size, 
         yyerror(parse_error_messages_tbl[ER_CODE_02].message);
     }
     if (replace == NULL) {
-        strcpy_p(replace, strlen(replace), _EMPTY_STRING, sizeof(_EMPTY_STRING));
+        strcpy_p(replace, strlen(replace), "", sizeof(""));
     }
     if (strlen(replace) < 1 || strlen(replace) < size) {
         yyerror(parse_error_messages_tbl[ER_CODE_03].message);
@@ -240,7 +248,7 @@ static void StoreFormatReplaceString(delimit_specifications_t *ds, size_t size, 
         yyerror(parse_error_messages_tbl[ER_CODE_04].message);
     }
     if (name == NULL) {
-        strcpy_p(name, strlen(name), _EMPTY_STRING, sizeof(_EMPTY_STRING));
+        strcpy_p(name, strlen(name), "", sizeof(""));
     }
     else {
         if (strlen(name) < 1) {

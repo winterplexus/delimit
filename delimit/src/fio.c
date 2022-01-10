@@ -4,7 +4,7 @@
 **  delimit - file I/O functions for the text file delimiter
 **  --------------------------------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -98,10 +98,10 @@ int DelimitWriteFieldQuote(delimit_specifications_t * ds) {
     ** Set field qoute based on given qoute type
     */
     if (ds->delimiters.double_quote) {
-        strcpy_p(qoute, sizeof(qoute), (string_c_t)_DOUBLE_QUOTE, sizeof(_DOUBLE_QUOTE));
+        strcpy_p(qoute, sizeof(qoute), (string_c_t)_DOUBLE_QUOTE_SEPARATOR, sizeof(_DOUBLE_QUOTE_SEPARATOR));
     }
     if (ds->delimiters.single_quote) {
-        strcpy_p(qoute, sizeof(qoute), (string_c_t)_SINGLE_QUOTE, sizeof(_SINGLE_QUOTE));
+        strcpy_p(qoute, sizeof(qoute), (string_c_t)_SINGLE_QUOTE_SEPARATOR, sizeof(_SINGLE_QUOTE_SEPARATOR));
     }
     if (!strlen(qoute)) {
         return (EXIT_SUCCESS);
@@ -192,7 +192,7 @@ int DelimitFileReadString(delimit_specifications_t *ds, string_c_t s, size_t siz
     ** Increment input file counter by string size if not end of file or read error
     */
     if (ds->input.io_state == IO_OK) {
-        ds->input.counter = ds->input.counter + size;
+        ds->input.counter = ds->input.counter + (long)size;
     }
     return (EXIT_SUCCESS);
 }

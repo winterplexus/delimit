@@ -4,7 +4,7 @@
 **  delimit - common definitions
 **  ----------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #ifndef __COMMON_H
 #define __COMMON_H
@@ -53,15 +53,6 @@
 #define _MAX_MESSAGE_SIZE 80
 #else
 #error  _MAX_MESSAGE_SIZE is defined in another include file
-#endif
-
-/*
-** Define empty string
-*/
-#ifndef _EMPTY_STRING
-#define _EMPTY_STRING ""
-#else
-#error  _EMPTY_STRING is defined in another include file
 #endif
 
 /*

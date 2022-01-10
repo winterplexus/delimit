@@ -19,19 +19,18 @@ DESCRIPTION
 
   The following options are available:
 
-  -h  display options that are interpreted by delimit
-  -f  format file
-  -i  input file
-  -o  output file
+  -f  [format file name]
+  -i  [input file name]
+  -o  [output file name]
+  -c  use comma field delimiter
+  -t  use tab field delimiter
+  -x  use space field delimiter
+  -s  use single quote delimiter
+  -d  use double quote delimiter
+  -u  [unique delimiter (0x00 hexadecimal number)]
   -r  report statistics
-  -w  write over mode
-  -v  display version
-  -s  single quote delimiters
-  -d  double quote delimiters
-  -c  comma field delimiters
-  -t  tab field delimiters
-  -x  space field delimiters
-  -u  unique delimiter (0x00 hexadecimal number)
+  -w  enable write over input file as output mode
+  -h  display usage
 
   An unique delimiter must be represented as a hexadecimal number and must be
   represented in 0x00 format (for example: the line feed character is 0a).
@@ -45,13 +44,14 @@ DELIMIT FORMAT FILE
   Field filter actions can be either:
 
   o  -             no action
-  o  alphabetic    allow only alphabetic characters
-  o  alphanumeric  allow only either alphabetic characters or digits (0-9)
-  o  numeric       allow only digits (0-9)
-  o  null          null field (zero length)
+  o  alphabetic    allow alphabetic characters only
+  o  alphanumeric  allow either alphabetic characters or digits (0-9) only
+  o  numeric       allow digits (0-9) only
+  o  printable     allow printable characters only
   o  remove        remove field
   o  spaces        replace field with space characters
   o  "string"      replace field with this string
+  o  null          null field (zero length)
 
   Field name can be either:
 
@@ -76,5 +76,4 @@ DEFAULTS
 
 NOTES
 
-  Copyright (c) 1993-2021 Code Construct Systems (CCS)
-
+  copyright (c) 1993-2022 Code Construct Systems (CCS)

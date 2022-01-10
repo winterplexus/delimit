@@ -4,7 +4,7 @@
 **  delimit - delimit text file utility
 **  -----------------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -60,6 +60,11 @@ int main(int argc, string_c_t argv[]) {
 */
 static void ProcessFiles(options_t *opts, delimit_specifications_t *ds) {
     /*
+    ** Set defaults
+    */
+    DelimitSetDefaults(ds, opts->input, opts->output);
+
+    /*
     ** Open files
     */
     OpenFiles(opts, ds);
@@ -107,13 +112,13 @@ static void OpenFiles(options_t *opts, delimit_specifications_t *ds) {
     /*
     ** Open input and output files and if over-write option is true, open input file with both read and write capability
     */
-    if (DelimitOpen(ds, opts->input, opts->output, opts->overwrite) != EXIT_SUCCESS) {
+    if (DelimitOpen(ds, opts->overwrite) != EXIT_SUCCESS) {
         DelimitClose(ds);
         EXIT_APPLICATION(EXIT_FAILURE);
     }
 
     /*
-    ** Open format file for parser
+    ** Open format file for parser and if open failed then print error messsage and exit
     */
     fopen_p(&yyin, opts->format, (string_c_t)_F_RO);
     if (yyin == NULL) {
@@ -132,7 +137,7 @@ static void ParseFormatFile(delimit_specifications_t *ds) {
     yyparseinit(ds);
 
     /*
-    ** Parse format file
+    ** Parse format file and if the parse failed then close files and exit
     */
     if (yyparse()) {
         CloseFiles(ds);
@@ -152,7 +157,7 @@ static void ParseFormatFile(delimit_specifications_t *ds) {
 */
 static void SetDelimiters(options_t *opts, delimit_specifications_t *ds) {
     /*
-    ** Set unique character delimiter
+    ** Set unique character delimiter and if set operation failed then close files and exit
     */
     if (DelimitSetUnique(ds, opts->unique, opts->unique_delimiter) != EXIT_SUCCESS) {
         DelimitClose(ds);
@@ -231,6 +236,10 @@ static void SetSystemSignals(void) {
 */
 static void InterruptHandler(int signal_number) {
     printf("signal detected (%d)!\n", signal_number);
+
+    /*
+    ** Exit application
+    */
     EXIT_APPLICATION(EXIT_SUCCESS);
 }
 
@@ -242,10 +251,10 @@ static void DisplayTotals(options_t *opts, delimit_specifications_t *ds) {
         printf("statistics\n");
         printf("----------\n");
         printf("input file  ->  ");
-        printf("total lines: %010ld\t", ds->input.line_count);
-        printf("total count: %010ld\n", ds->input.counter);
+        printf("total lines: %ld\t", ds->input.line_count);
+        printf("total count: %ld\n", ds->input.counter);
         printf("output file ->  ");
-        printf("total lines: %010ld\t", ds->output.line_count);
-        printf("total count: %010ld\n", ds->output.counter);
+        printf("total lines: %ld\t", ds->output.line_count);
+        printf("total count: %ld\n", ds->output.counter);
     }
 }

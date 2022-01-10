@@ -4,7 +4,7 @@
 **  delimit - version information
 **  -----------------------------
 **
-**  copyright (c) 1993-2021 Code Construct Systems (CCS)
+**  copyright (c) 1993-2022 Code Construct Systems (CCS)
 */
 #ifndef __VERSION_H
 #define __VERSION_H
@@ -23,6 +23,6 @@
 ** Define version product and string
 */
 #define _VERSION_PRODUCT "delimit"
-#define _VERSION_RELEASE "delimit 9.5.0 release 2"
+#define _VERSION_RELEASE "delimit 9.6.0 release 1"
 
 #endif /* __VERSION_H */
