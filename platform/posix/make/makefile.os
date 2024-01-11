@@ -4,9 +4,9 @@
 #                                                                              #
 # delimit utility                                                              #
 #                                                                              #
-# version 9.6.0 release 1                                                      #
+# version 9.7.0 release 1                                                      #
 #                                                                              #
-# copyright (c) 1993-2021 Code Construct Systems (CCS) [CONFIDENTIAL]          #
+# copyright (c) 1993-2024 Code Construct Systems (CCS) [CONFIDENTIAL]          #
 #                                                                              #
 ################################################################################
 
@@ -155,4 +155,3 @@ clean:
 	rm -f parse.h
 	rm -f lex.c
 	rm -f $(TARGET)
-

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo delimit 9.6.0 release 1
+echo delimit 9.8.0 release 1
 echo delimit test script - open systems environments
 echo ================================================================================
 

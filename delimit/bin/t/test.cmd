@@ -1,6 +1,6 @@
 @echo off
 
-echo.delimit 9.6.0 release 1
+echo.delimit 9.8.0 release 1
 echo.delimit test script - Microsoft Windows OS environment
 echo.================================================================================
 

@@ -27,7 +27,7 @@ Filter Action Field Options | Description
 `remove` | remove field
 `spaces` | replace field with space characters
 `"string"` | replace field with this string
-`null` | null field (zero length)
+`null` | null field (no text data)
 
 `<field name>`
 

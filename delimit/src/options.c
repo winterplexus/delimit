@@ -4,7 +4,7 @@
 **  delimit - command line options
 **  ------------------------------
 **
-**  copyright (c) 1993-2022 Code Construct Systems (CCS)
+**  copyright (c) 1993-2024 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 

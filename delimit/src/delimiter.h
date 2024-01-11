@@ -4,7 +4,7 @@
 **  delimiter - text file delimiter
 **  -------------------------------
 **
-**  copyright (c) 1993-2022 Code Construct Systems (CCS)
+**  copyright (c) 1993-2024 Code Construct Systems (CCS)
 */
 #ifndef __DELIMITER_H
 #define __DELIMITER_H
