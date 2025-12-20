@@ -4,9 +4,9 @@
 #                                                                              #
 # delimit utility                                                              #
 #                                                                              #
-# version 9.7.0 release 1                                                      #
+# version 9.8.0 release 1                                                      #
 #                                                                              #
-# copyright (c) 1993-2024 Code Construct Systems (CCS) [CONFIDENTIAL]          #
+# copyright (c) 1993-2025 Code Construct Systems (CCS) [CONFIDENTIAL]          #
 #                                                                              #
 ################################################################################
 

@@ -4,7 +4,7 @@
 **  delimit - utility functions for the text file delimiter
 **  -------------------------------------------------------
 **
-**  copyright (c) 1993-2024 Code Construct Systems (CCS)
+**  copyright (c) 1993-2025 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -27,7 +27,7 @@ void *MemoryAllocate(const long size) {
     **  Fill allocated heap memory with nulls.
     */
     memset(address, 0, size);
-    
+
     /*
     ** Print debug heap memory allocation parameters
     */

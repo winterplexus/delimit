@@ -37,3 +37,22 @@ Name Field Options | Description
 `"field name"` | descriptive name for field
 
 The application is written in the C language for both Windows and Linux operating systems.
+
+### delimit
+```
+usage: delimit (options)
+
+options: -f <format file name>
+         -i <input file name>
+         -o <output file name>
+         -c use comma field delimiter
+         -t use tab field delimiter
+         -x use space field delimiter
+         -s use single quote delimiter
+         -d use double quote delimiter
+         -u <unique delimiter (0x00 hexadecimal number)>
+         -r report statistics
+         -w enable write over input file as output mode
+         -v display version
+         -? print this usage
+```

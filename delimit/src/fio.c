@@ -4,7 +4,7 @@
 **  delimit - file I/O functions for the text file delimiter
 **  --------------------------------------------------------
 **
-**  copyright (c) 1993-2024 Code Construct Systems (CCS)
+**  copyright (c) 1993-2025 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -63,7 +63,7 @@ int DelimitFileOpenInputAsOutput(delimit_specifications_t *ds) {
 /*
 ** Write field delimiter
 */
-int DelimitWriteFieldDelimiter(delimit_specifications_t * ds) {
+int DelimitWriteFieldDelimiter(delimit_specifications_t *ds) {
     char delimiter[2] = { 0, 0 };
 
     /*
@@ -91,7 +91,7 @@ int DelimitWriteFieldDelimiter(delimit_specifications_t * ds) {
 /*
 ** Write field quote
 */
-int DelimitWriteFieldQuote(delimit_specifications_t * ds) {
+int DelimitWriteFieldQuote(delimit_specifications_t *ds) {
     char qoute[2] = { '\0', '\0' };
 
     /*
@@ -169,7 +169,7 @@ int DelimitFileReadString(delimit_specifications_t *ds, string_c_t s, size_t siz
     ** Read string from input file
     */
     memset(s, 0, size + 1);
-    fread(s, size, 1, ds->input.fp);
+    size_t count = fread(s, sizeof(char), size, ds->input.fp);
 
     /*
     ** Check if end of file
@@ -192,7 +192,7 @@ int DelimitFileReadString(delimit_specifications_t *ds, string_c_t s, size_t siz
     ** Increment input file counter by string size if not end of file or read error
     */
     if (ds->input.io_state == IO_OK) {
-        ds->input.counter = ds->input.counter + (long)size;
+        ds->input.counter = ds->input.counter + (long)count;
     }
     return (EXIT_SUCCESS);
 }
@@ -225,17 +225,19 @@ int DelimitFileWrite(delimit_specifications_t *ds, int c) {
 ** Write a string to output file for text file delimiter
 */
 int DelimitFileWriteString(delimit_specifications_t *ds, string_c_t s) {
+    size_t size = strlen(s);
+
     /*
     ** Write string to output file
     */
-    fwrite(s, sizeof(char), strlen(s), ds->output.fp);
+    fwrite(s, sizeof(char), size, ds->output.fp);
     fflush(ds->output.fp);
 
     /*
     ** Increment output file counter by string size if not write error
     */
     if (!ferror(ds->output.fp)) {
-        ds->output.counter++;
+        ds->output.counter = ds->output.counter + (long)size;
     }
     else {
         printf("error-> unable to write to output file: %s (%d)\n", ds->output.name, errno);

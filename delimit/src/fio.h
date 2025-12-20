@@ -4,7 +4,7 @@
 **  delimit - file I/O functions for the text file delimiter
 **  --------------------------------------------------------
 **
-**  copyright (c) 1993-2024 Code Construct Systems (CCS)
+**  copyright (c) 1993-2025 Code Construct Systems (CCS)
 */
 #ifndef __FIO_H
 #define __FIO_H

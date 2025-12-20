@@ -4,7 +4,7 @@
 **  delimit - lexical scanner for the commands interpreter
 **  ------------------------------------------------------
 **
-**  copyright (c) 1993-2024 Code Construct Systems (CCS)
+**  copyright (c) 1993-2025 Code Construct Systems (CCS)
 */
 %option noyywrap
 

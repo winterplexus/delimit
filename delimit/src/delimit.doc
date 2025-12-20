@@ -11,31 +11,34 @@ SYNOPSIS
 
 DESCRIPTION
 
-  delimit is designed to read each record containing fields from a text file and
-  insert delimiters between each field. delimit can reformat each field using
-  filter actions defined in a format file where each line in the format file
-  must contain the field size, field filter action and field name for each field
-  in the input text file.
+  delimit is designed to read records containing fields from an input text file
+  and insert a character delimiter between each field when writing the records
+  to another text file.
 
-  The following options are available:
+  delimit can reformat each field using filter actions as defined in a format
+  file where the format file must contain the size, filter action and name for
+  each field in the input text file.
 
-  -f  [format file name]
-  -i  [input file name]
-  -o  [output file name]
-  -c  use comma field delimiter
-  -t  use tab field delimiter
-  -x  use space field delimiter
-  -s  use single quote delimiter
-  -d  use double quote delimiter
-  -u  [unique delimiter (0x00 hexadecimal number)]
-  -r  report statistics
-  -w  enable write over input file as output mode
-  -h  display usage
+OPTIONS
+
+  -f <format file name>
+  -i <input file name>
+  -o <output file name>
+  -c use comma field delimiter
+  -t use tab field delimiter
+  -x use space field delimiter
+  -s use single quote delimiter
+  -d use double quote delimiter
+  -u <unique delimiter (0x00 hexadecimal number)>
+  -r report statistics
+  -w enable write over input file as output mode
+  -v display version
+  -? print this usage
 
   An unique delimiter must be represented as a hexadecimal number and must be
-  represented in 0x00 format (for example: the line feed character is 0a).
+  represented in 0x00 format (for example: line feed character is 0x0A).
 
-DELIMIT FORMAT FILE
+FORMAT FILE
 
   Each line in the format file must be contain the following:
 
@@ -68,12 +71,12 @@ DELIMIT FORMAT FILE
 
 DEFAULTS
 
-  o  maximum field size is 512 bytes
-  o  maximum field replacement string size is 512 bytes
-  o  maximum field name is 64 characters
+  o  maximum field size is 1024 bytes
+  o  maximum field replacement string size is 1024 bytes
+  o  maximum field name is 128 characters
   o  non-alphabetic characters are replaced with a space
   o  non-numeric digits are replaced with a zero
 
 NOTES
 
-  copyright (c) 1993-2024 Code Construct Systems (CCS)
+  copyright (c) 1993-2025 Code Construct Systems (CCS)

@@ -4,7 +4,7 @@
 **  delimiter - text file delimiter
 **  -------------------------------
 **
-**  copyright (c) 1993-2024 Code Construct Systems (CCS)
+**  copyright (c) 1993-2025 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -245,7 +245,7 @@ int DelimitFile(delimit_specifications_t *ds) {
 /*
 ** Delimit add field count
 */
-int DelimitAddFieldCount(delimit_specifications_t *ds) {
+int DelimitAddFieldCount(delimit_specifications_t * ds) {
     ds->fields.count++;
     return (EXIT_SUCCESS);
 }
@@ -253,7 +253,7 @@ int DelimitAddFieldCount(delimit_specifications_t *ds) {
 /*
 ** Delimit add field maximum size
 */
-int DelimitAddFieldMaxSize(delimit_specifications_t *ds, size_t size) {
+int DelimitAddFieldMaxSize(delimit_specifications_t * ds, size_t size) {
     if (size) {
         ds->fields.max_size = ds->fields.max_size + size;
     }
@@ -263,7 +263,7 @@ int DelimitAddFieldMaxSize(delimit_specifications_t *ds, size_t size) {
 /*
 ** Delimit add field maximum record size
 */
-int DelimitAddFieldMaxRecordSize(delimit_specifications_t *ds, size_t size) {
+int DelimitAddFieldMaxRecordSize(delimit_specifications_t * ds, size_t size) {
     if (size) {
         ds->fields.max_record_size = ds->fields.max_record_size + size;
     }
@@ -273,7 +273,7 @@ int DelimitAddFieldMaxRecordSize(delimit_specifications_t *ds, size_t size) {
 /*
 ** Delimit set comma
 */
-int DelimitSetComma(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetComma(delimit_specifications_t * ds, bool_c_t b) {
     ds->delimiters.comma = b;
     return (EXIT_SUCCESS);
 }
@@ -281,7 +281,7 @@ int DelimitSetComma(delimit_specifications_t *ds, bool_c_t b) {
 /*
 ** Delimit set tab
 */
-int DelimitSetTab(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetTab(delimit_specifications_t * ds, bool_c_t b) {
     ds->delimiters.tab = b;
     return (EXIT_SUCCESS);
 }
@@ -289,7 +289,7 @@ int DelimitSetTab(delimit_specifications_t *ds, bool_c_t b) {
 /*
 ** Delimit set space
 */
-int DelimitSetSpace(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetSpace(delimit_specifications_t * ds, bool_c_t b) {
     ds->delimiters.space = b;
     return (EXIT_SUCCESS);
 }
@@ -297,7 +297,7 @@ int DelimitSetSpace(delimit_specifications_t *ds, bool_c_t b) {
 /*
 ** Delimit set single
 */
-int DelimitSetSingle(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetSingle(delimit_specifications_t * ds, bool_c_t b) {
     ds->delimiters.single_quote = b;
     return (EXIT_SUCCESS);
 }
@@ -305,7 +305,7 @@ int DelimitSetSingle(delimit_specifications_t *ds, bool_c_t b) {
 /*
 ** Delimit set double
 */
-int DelimitSetDouble(delimit_specifications_t *ds, bool_c_t b) {
+int DelimitSetDouble(delimit_specifications_t * ds, bool_c_t b) {
     ds->delimiters.double_quote = b;
     return (EXIT_SUCCESS);
 }
@@ -313,7 +313,7 @@ int DelimitSetDouble(delimit_specifications_t *ds, bool_c_t b) {
 /*
 ** Delimit set unique
 */
-int DelimitSetUnique(delimit_specifications_t *ds, bool_c_t b, string_c_t value) {
+int DelimitSetUnique(delimit_specifications_t * ds, bool_c_t b, string_c_t value) {
     unsigned long number;
 
     /*
@@ -345,7 +345,7 @@ int DelimitSetUnique(delimit_specifications_t *ds, bool_c_t b, string_c_t value)
 /*
 ** Delimit set defaults
 */
-int DelimitSetDefaults(delimit_specifications_t *ds, string_c_t input, string_c_t output) {
+int DelimitSetDefaults(delimit_specifications_t * ds, string_c_t input, string_c_t output) {
     ds->fields.count = 0;
     ds->fields.max_size = 0;
     ds->fields.max_record_size = 0;
@@ -365,7 +365,7 @@ int DelimitSetDefaults(delimit_specifications_t *ds, string_c_t input, string_c_
 /*
 ** Alphabetic only
 */
-static string_c_t AlphabeticOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
+static string_c_t AlphabeticOnly(delimit_specifications_t * ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -384,7 +384,7 @@ static string_c_t AlphabeticOnly(delimit_specifications_t *ds, string_c_t s, siz
 /*
 ** Alphanumeric only
 */
-static string_c_t AlphabeticNumericOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
+static string_c_t AlphabeticNumericOnly(delimit_specifications_t * ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -403,7 +403,7 @@ static string_c_t AlphabeticNumericOnly(delimit_specifications_t *ds, string_c_t
 /*
 ** Numeric only
 */
-static string_c_t NumericOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
+static string_c_t NumericOnly(delimit_specifications_t * ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -422,7 +422,7 @@ static string_c_t NumericOnly(delimit_specifications_t *ds, string_c_t s, size_t
 /*
 ** Printable only
 */
-static string_c_t PrintableOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
+static string_c_t PrintableOnly(delimit_specifications_t * ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -441,7 +441,7 @@ static string_c_t PrintableOnly(delimit_specifications_t *ds, string_c_t s, size
 /*
 ** Spaces only
 */
-static string_c_t SpacesOnly(delimit_specifications_t *ds, string_c_t s, size_t size) {
+static string_c_t SpacesOnly(delimit_specifications_t * ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -460,7 +460,7 @@ static string_c_t SpacesOnly(delimit_specifications_t *ds, string_c_t s, size_t 
 /*
 ** Replace string
 */
-static string_c_t ReplaceString(delimit_specifications_t *ds, string_c_t s, size_t size, string_c_t r) {
+static string_c_t ReplaceString(delimit_specifications_t * ds, string_c_t s, size_t size, string_c_t r) {
     string_c_t sp = s;
     size_t i = 0;
 
@@ -474,7 +474,7 @@ static string_c_t ReplaceString(delimit_specifications_t *ds, string_c_t s, size
 /*
 ** Zero length
 */
-static string_c_t ZeroLength(delimit_specifications_t *ds, string_c_t s, size_t size) {
+static string_c_t ZeroLength(delimit_specifications_t * ds, string_c_t s, size_t size) {
     string_c_t sp = s;
     size_t i = 0;
 

@@ -4,7 +4,7 @@
 **  delimiter - text file delimiter
 **  -------------------------------
 **
-**  copyright (c) 1993-2024 Code Construct Systems (CCS)
+**  copyright (c) 1993-2025 Code Construct Systems (CCS)
 */
 #ifndef __DELIMITER_H
 #define __DELIMITER_H
@@ -18,7 +18,7 @@
 #error  _MAX_FIELD_SIZE is defined in another include file
 #endif
 #ifndef _MAX_FIELD_NAME_SIZE
-#define _MAX_FIELD_NAME_SIZE 64
+#define _MAX_FIELD_NAME_SIZE 128
 #else
 #error  _MAX_FIELD_NAME_SIZE is defined in another include file
 #endif

@@ -4,7 +4,7 @@
 **  delimit - command line options
 **  ------------------------------
 **
-**  copyright (c) 1993-2024 Code Construct Systems (CCS)
+**  copyright (c) 1993-2025 Code Construct Systems (CCS)
 */
 #include "delimit.h"
 
@@ -51,7 +51,7 @@ static void GetOptionValues(int argc, string_c_t argv[], options_t *opts) {
     ** Process each command line option
     */
     for (i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-h") == 0) {
+        if (strcmp(argv[i], "-?") == 0) {
             DisplayUsage();
         }
         else if (strcmp(argv[i], "-f") == 0) {
@@ -204,20 +204,19 @@ static void DisplayVersion(int argc) {
 */
 static void DisplayUsage(void) {
     printf("usage: %s (options)\n\n", _VERSION_PRODUCT);
-    printf("where (options) include:\n\n");
-    printf("-f  [format file name]\n");
-    printf("-i  [input file name]\n");
-    printf("-o  [output file name]\n");
-    printf("-c  use comma field delimiter\n");
-    printf("-t  use tab field delimiter\n");
-    printf("-x  use space field delimiter\n");
-    printf("-s  use single quote delimiter\n");
-    printf("-d  use double quote delimiter\n");
-    printf("-u  [unique delimiter (0x00 hexadecimal number)]\n");
-    printf("-r  report statistics\n");
-    printf("-w  enable write over input file as output mode\n");
-    printf("-h  display usage\n");
-    printf("-v  display version\n");
+    printf("options: -f <format file name>\n");
+    printf("         -i <input file name>\n");
+    printf("         -o <output file name>\n");
+    printf("         -c use comma field delimiter\n");
+    printf("         -t use tab field delimiter\n");
+    printf("         -x use space field delimiter\n");
+    printf("         -s use single quote delimiter\n");
+    printf("         -d use double quote delimiter\n");
+    printf("         -u <unique delimiter (0x00 hexadecimal number)>\n");
+    printf("         -r report statistics\n");
+    printf("         -w enable write over input file as output mode\n");
+    printf("         -v display version\n");
+    printf("         -? print this usage\n");
 
     /*
     ** Exit application

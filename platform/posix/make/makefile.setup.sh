@@ -5,5 +5,5 @@
 # *                                                                              *
 # ********************************************************************************
 
-cp makefile.os ../../../delimit/src/makefile
+cp makefile ../../../delimit/src/makefile
 
